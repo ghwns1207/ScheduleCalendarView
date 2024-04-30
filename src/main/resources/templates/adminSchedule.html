@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일정 관리</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script defer src="/js/adminSchedule.js"></script>
+    <link  rel="stylesheet" href="/css/adminSchedule.css">
+</head>
+<body>
+<div id="admin_schedulePageMain_div">
+    <table id="scheduleTable">
+        <div>
+            <h2>일정 목록</h2>
+            <label for="nameType">회원명 검색</label>
+            <input type="radio" name="selectType" id="nameType" onclick="toggleDiv('selectNameType', this)">
+
+            <label for="categoryType">카테고리 검색</label>
+            <input type="radio" name="selectType" id="categoryType" onclick="toggleDiv('selectCategoryType', this)">
+
+            <label for="dateType">기간 검색</label>
+            <input type="radio" name="selectType" id="dateType" onclick="toggleDiv('selectDateType', this)">
+
+            <div id="selectNameType">
+                <label for="selectName">회원명 : </label>
+                <input type="text" id="selectName">
+            </div>
+
+            <div id="selectCategoryType">
+                <label for="selectCategory">카테고리 : </label>
+                <input type="text" id="selectCategory">
+            </div>
+
+            <div id="selectDateType">
+                <label for="selectStartDate">기간 : </label>
+                <input type="date" id="selectStartDate"> 시작 기간
+                <input type="date" id="selectEndDate"> 종료 기간
+            </div>
+        </div>
+
+        <thead>
+        <tr>
+            <th>작성자</th>
+            <th>카테고리</th>
+            <th>제목</th>
+            <th>하루일정</th>
+            <th>장소</th>
+            <th>메모</th>
+            <th>참석자</th>
+            <th>시작시간</th>
+            <th>종료시간</th>
+        </tr>
+        </thead>
+        <tbody id="scheduleBody">
+        <!-- User schedules will be added here dynamically -->
+        <tr>
+            <td>검색해주세요.</td>
+        </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

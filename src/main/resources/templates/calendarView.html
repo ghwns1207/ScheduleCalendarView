@@ -1,17 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CalendarView</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalendarView</title>
+    <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js
+"></script>
+    <link href="/css/calendarView.css" rel="stylesheet">
+    <script src="/js/calendarView.js"></script>
 
 </head>
 <body>
 
-<!-- 달력을 표시할 div 요소 -->
-<div id="calendar"></div>
+<div id='calendar-container'>
+    <div id='calendar'></div>
+</div>
 
 
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span id="close" class="close">&times;</span>
+        <div>
+            <h2>일정 추가</h2>
+            <table>
+                <tr>
+                    <td><label for="category">카테고리</label></td>
+                    <td>
+                        <select name="category" id="category">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>색상</td>
+                    <td>
+                        <input type="radio" id="color1" name="color" value="#162855" checked>
+                        <label for="color1" style="background-color: #162855; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
 
+                        <input type="radio" id="color2" name="color" value="#6a5acd">
+                        <label for="color2" style="background-color: #6a5acd; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="title">제목</label></td>
+                    <td><input type="text" placeholder="제목을 입력하세요." id="title" name="title"></td>
+                </tr>
+                <tr>
+                    <td><label for="allDay">하루일정 </label></td>
+                    <td><input type="checkbox" role="switch" id="allDay"></td>
+                </tr>
+                <tr>
+                    <td><label for="repetition">반복</label></td>
+                    <td><input type="checkbox" id="repetition"></td>
+                </tr>
+                <tr>
+                    <td><label for="location">장소</label></td>
+                    <td><input type="text" placeholder="장소를 입력하세요." id="location"></td>
+                </tr>
+                <tr>
+                    <td><label for="participant">참석자</label></td>
+                    <td> <select name="participant" id="participant">
+                        <option selected>참석자 선택해주세요.</option>
+                    </select>
+                        <button id = "addParticipant" onclick="addParticipants()">추가</button></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table id="participantTable">
+                            <!-- 여기에 선택된 참석자들이 추가됩니다. -->
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="start">시작시간</label></td>
+                    <td><input type="datetime-local" id="start" name="start"></td>
+                </tr>
+                <tr>
+                    <td><label for="end">종료시간</label></td>
+                    <td><input type="datetime-local" id="end" name="end"></td>
+                </tr>
+                <tr>
+                    <td><label for="description">메모 </label></td>
+                    <td><textarea  style="height: 50px;" placeholder="내용 입력하세요." id="description"></textarea></td>
+                </tr>
+            </table>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                    취소
+                </button>
+                <button type="button" class="btn btn-primary" id="saveChanges">
+                    추가
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 일정 수정 모달 -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span id="closeEditModal" class="close">&times;</span>
+        <div>
+            <!-- 수정 폼 -->
+            <h2>일정 수정</h2><span id = "editModalName"></span>
+            <table id="scheduleTable">
+                <thead>
+                <tr>
+                    <th>카테고리</th>
+                    <th>제목</th>
+                    <th>하루일정</th>
+                    <th>장소</th>
+                    <th>메모</th>
+                    <th>참석자</th>
+                    <th>시작시간</th>
+                    <th>종료시간</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                <!-- User schedules will be added here dynamically -->
+                </tbody>
+            </table>
+            <!-- 수정 및 삭제 버튼 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 새로운 모달 -->
+<div id="eventInfoModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span id="closeEventInfoModal" class="close">&times;</span>
+        <div>
+            <!-- 내용 추가 -->
+            <h2>일정 정보</h2>
+            <table id="scheduleInfoTable">
+                <thead>
+                <tr>
+                    <th>카테고리</th>
+                    <th>제목</th>
+                    <th>하루일정</th>
+                    <th>장소</th>
+                    <th>참석자</th>
+                    <th>시작시간</th>
+                    <th>종료시간</th>
+                    <th>메모</th>
+                </tr>
+                </thead>
+                <tbody id="scheduleInfoBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <span id="updateClose" class="close">&times;</span>
+        <div>
+            <h2>일정 수정</h2>
+            <table>
+                <tr>
+                    <td><label for="category">카테고리</label></td>
+                    <td>
+                        <select name="category" id="updateCategory">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>색상</td>
+                    <td>
+                        <input type="radio" id="updateColor1" name="color" value="#162855" checked>
+                        <label for="updateColor1" style="background-color: #162855; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+
+                        <input type="radio" id="updateColor2" name="color" value="#6a5acd">
+                        <label for="updateColor2" style="background-color: #6a5acd; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="updateTitle">제목</label></td>
+                    <td><input type="text" placeholder="제목을 입력하세요." id="updateTitle" name="title"></td>
+                </tr>
+                <tr>
+                    <td><label for="updateAllDay">하루일정 </label></td>
+                    <td><input type="checkbox" role="switch" id="updateAllDay"></td>
+                </tr>
+                <tr>
+                    <td><label for="updateLocation">장소</label></td>
+                    <td><input type="text" placeholder="장소를 입력하세요." id="updateLocation"></td>
+                </tr>
+                <tr>
+                    <td><label for="updateParticipant">참석자</label></td>
+                    <td> <select name="participant" id="updateParticipant">
+                        <option selected>참석자 선택해주세요.</option>
+                    </select>
+                        <button id = "updateAddParticipant" onclick="updateParticipant()">추가</button></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table id="updateParticipantTable">
+                            <!-- 여기에 선택된 참석자들이 추가됩니다. -->
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="updateStart">시작시간</label></td>
+                    <td><input type="datetime-local" id="updateStart" name="start"></td>
+                </tr>
+                <tr>
+                    <td><label for="updateEnd">종료시간</label></td>
+                    <td><input type="datetime-local" id="updateEnd" name="end"></td>
+                </tr>
+                <tr>
+                    <td><label for="updatedDescription">메모 </label></td>
+                    <td><textarea  style="height: 50px;" placeholder="내용 입력하세요." id="updatedDescription"></textarea></td>
+                </tr>
+            </table>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

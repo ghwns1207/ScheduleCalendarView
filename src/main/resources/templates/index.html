@@ -1,11 +1,29 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <script defer src="/js/index.js"></script>
 </head>
 <body>
-        <h2>안녕하세요 췍췍</h2>
+<!-- 모델에서 "username" 속성을 꺼내고 표시합니다. -->
+<p id="userName"></p>
+
+<!-- 링크 역할을 하는 버튼 -->
+<button id="loginButton" class="loginButton">로그인</button>
+
+<button id="logoutBtn" style="display: none">로그아웃</button>
+
+<div id="mainDiv">
+    <div id="calendar_div">
+
+    </div>
+    <div id="adminPage_div">
+
+    </div>
+</div>
+
+
+
 </body>
 </html>

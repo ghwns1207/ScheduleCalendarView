@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>직급 관리</title>
+  <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+  <link href="/css/adminPosition.css" rel="stylesheet">
+  <script defer src="/js/adminPosition.js"></script>
+</head>
+<body>
+<div id="admin_positionMain_div">
+  <div>
+    <h2>카테고리</h2>
+    <table>
+
+      <thead>
+      <tr>
+        <th>직급 id</th>
+        <th>직급 명</th>
+        <th></th>
+      </tr>
+
+      </thead>
+
+      <tbody id="positionBody">
+
+      </tbody>
+
+    </table>
+  </div>
+  <div>
+    <h2>직급 추가</h2>
+    <div>
+      <label for="addPosition">직급 명 :</label>
+      <input type="text" id="addPosition">
+    </div>
+    <button onclick="addBtnCen()">취소</button>
+    <button onclick="addBtnSave()">저장</button>
+  </div>
+</div>
+
+</body>
+</html>

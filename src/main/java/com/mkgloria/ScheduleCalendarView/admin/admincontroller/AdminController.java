@@ -16,5 +16,18 @@ public class AdminController {
     @GetMapping("/signUp")
     public String joinUser(){return "signup";}
 
+    @GetMapping("/schedule")
+    public String schedule(){return "adminSchedule";}
+
+    @GetMapping("/category")
+    public String category(){return "adminCategory";}
+
+    @GetMapping("/position")
+    public String position(){return "adminPosition";}
+
+    @GetMapping("/userInfo")
+    public String userInfo(){return "signup";}
+
+
 
 }

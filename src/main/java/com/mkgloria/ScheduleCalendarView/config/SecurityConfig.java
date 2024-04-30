@@ -48,9 +48,10 @@ public class SecurityConfig{
                         .permitAll()
         ).logout(logout ->
                         logout
-                                .logoutSuccessUrl("/login")
+                                .logoutSuccessUrl("/loginFrom")
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
+                                .deleteCookies("jwtToken")
                 ).exceptionHandling(exceptionHandling ->
                 exceptionHandling
                         .accessDeniedHandler(customAccessDeniedHandler)

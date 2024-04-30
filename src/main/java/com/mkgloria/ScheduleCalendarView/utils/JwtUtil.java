@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -48,6 +49,7 @@ public class JwtUtil {
         claims.put("id", user.getUser().getId());
         claims.put("user_id", user.getUser().getUser_id());
         claims.put("user_name", user.getUser().getUser_name());
+        claims.put("userRole", user.getUser().getUserRole());
 
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tokenValidity = now.plusSeconds(expirationTime);
@@ -73,7 +75,8 @@ public class JwtUtil {
         return UserDTO.builder()
                 .id(claims.get("id", Long.class))
                 .user_id(claims.get("user_id", String.class))
-                .user_name(claims.get("user_id", String.class))
+                .user_name(claims.get("user_name", String.class))
+                .userRole(claims.get("userRole" , String.class))
                 .build();
     }
 
@@ -125,10 +128,10 @@ public class JwtUtil {
     /*
     *  Request Header 부터 JWT 토큰 추출
     * */
-    public String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    public String resolveToken(HttpHeaders headers){
+        String jwtToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(jwtToken) && jwtToken.startsWith("Bearer ")) {
+            return jwtToken.substring(7);
         }
         return null;
     }

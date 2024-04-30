@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카테고리 관리</title>
+    <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+    <link href="/css/adminCategory.css" rel="stylesheet">
+    <script defer src="/js/adminCategory.js"></script>
+</head>
+<body>
+    <div id="admin_scheduleMain_div">
+        <div>
+            <h2>카테고리</h2>
+            <table>
+
+                <thead>
+                <tr>
+                    <th>카테고리 id</th>
+                    <th>카테고리 명</th>
+                    <th></th>
+                </tr>
+
+                </thead>
+
+                <tbody id="categoryBody">
+
+                </tbody>
+
+            </table>
+        </div>
+        <div>
+            <h2>카테고리 추가</h2>
+            <div>
+                <label for="addCategory">카테고리명 :</label>
+                <input type="text" id="addCategory">
+            </div>
+                <button onclick="addBtnCen()">취소</button>
+                <button onclick="addBtnSave()">저장</button>
+        </div>
+    </div>
+
+</body>
+</html>

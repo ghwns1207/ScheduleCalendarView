@@ -1,0 +1,215 @@
+@charset "UTF-8";
+
+@mixin flex-align-center {
+    display: flex;
+    align-items: center;
+}
+
+@font-face {
+    font-family: "Pretendard-Regular";
+    src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+html {
+    font-size: 62.5%;
+    font-family: "Pretendard-Regular";
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+main {
+    table {
+        width: 100%;
+        align-items: center;
+    }
+    h2 {
+        margin-top: 60px;
+        text-align: center;
+        font-size: 4rem;
+        color: #3b4656;
+    }
+    .signup-id {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 30px;
+        .signup-id-title {
+            font-size: 2.4rem;
+        }
+        .signup-id-text {
+            width: 100%;
+            margin-top: 15px;
+            height: 60px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 20px;
+            outline: none;
+            padding-left: 20px;
+            box-sizing: border-box;
+            background-color: #e9eef2;
+        }
+    }
+    .signup-name {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 30px;
+        .signup-name-title {
+            font-size: 2.4rem;
+        }
+        .signup-name-text {
+            width: 100%;
+            margin-top: 15px;
+            height: 60px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 20px;
+            outline: none;
+            padding-left: 20px;
+            background-color: #e9eef2;
+            box-sizing: border-box;
+        }
+    }
+
+    .signup-birth {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 30px;
+        .signup-birth-title {
+            font-size: 2.4rem;
+        }
+        .signup-birthday {
+            width: 100%;
+            margin-top: 15px;
+            height: 60px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 20px;
+            outline: none;
+            padding: 0 20px;
+            background-color: #e9eef2;
+            box-sizing: border-box;
+            font-family: "Pretendard-Regular";
+        }
+    }
+
+    .signup-password {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 30px;
+        .signup-password-title {
+            font-size: 2.4rem;
+        }
+        .signup-password-text {
+            width: 100%;
+            margin-top: 15px;
+            height: 60px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 20px;
+            outline: none;
+            padding-left: 20px;
+            background-color: #e9eef2;
+            box-sizing: border-box;
+        }
+    }
+
+    .signup-checkpw {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 30px;
+        .signup-checkpw-title {
+            width: 100%;
+            font-size: 2.4rem;
+        }
+        .signup-checkpw-text {
+            width: 100%;
+            margin-top: 15px;
+            height: 60px;
+            font-size: 15px;
+            border: 0;
+            border-radius: 20px;
+            outline: none;
+            padding-left: 20px;
+            background-color: #e9eef2;
+            box-sizing: border-box;
+        }
+    }
+    .signup-userrole {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 70px;
+        .signup-userrole-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .signup-userrole-title {
+                font-size: 2.4rem;
+                line-height: 60px;
+            }
+            .signup-userrole-select {
+                width: 60%;
+                height: 60px;
+                font-size: 18px;
+                border: 0;
+                border-radius: 20px;
+                outline: none;
+                background-color: #e9eef2;
+                padding-left: 20px;
+                font-family: "Pretendard-Regular";
+            }
+        }
+    }
+    .signup-userposition {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 70px;
+        .signup-userposition-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .signup-userposition-title {
+                font-size: 2.4rem;
+                line-height: 60px;
+            }
+            .signup-userposition-select {
+                width: 60%;
+                height: 60px;
+                font-size: 18px;
+                border: 0;
+                border-radius: 20px;
+                outline: none;
+                background-color: #e9eef2;
+                padding-left: 20px;
+                font-family: "Pretendard-Regular";
+            }
+        }
+    }
+
+    .signup-button {
+        width: 100%;
+        padding: 0 5%;
+        padding-top: 70px;
+        .container-signup-button {
+            display: flex;
+            justify-content: space-between;
+            button {
+                width: 49.3333333%;
+                height: 60px;
+                font-size: 2.6rem;
+                line-height: 60px;
+                color: #fff;
+                background-color: #0f3777;
+                border-radius: 10px;
+                border: none;
+                font-family: "Pretendard-Regular";
+            }
+        }
+    }
+}

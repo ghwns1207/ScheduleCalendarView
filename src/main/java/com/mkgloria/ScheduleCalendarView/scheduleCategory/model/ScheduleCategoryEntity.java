@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +26,7 @@ public class ScheduleCategoryEntity {
     @Column(name = "category_name", nullable = false)
     private String category_name;
 
+    @CreationTimestamp
     @Column(name = "created_at",nullable = false)
     private LocalDateTime created_at;
 

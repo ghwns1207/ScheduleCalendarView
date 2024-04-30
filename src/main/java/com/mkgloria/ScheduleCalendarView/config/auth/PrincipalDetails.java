@@ -63,6 +63,10 @@ public class PrincipalDetails implements UserDetails {
         return user.getUser_id();
     }
 
+    public String getUserRole(){
+        return user.getUserRole();
+    }
+
     @Override // 계정 만료
     public boolean isAccountNonExpired() {return true;}
 
