@@ -23,8 +23,10 @@ public class ScheduleParticipantEntity {
     private Long participant_id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", nullable = false,
+            foreignKey = @ForeignKey(name = "FK_schedule_participant_schedule_id",
+                    foreignKeyDefinition = "FOREIGN KEY (`schedule_id`) REFERENCES `user_schedule` (`schedule_id`) ON DELETE CASCADE ON UPDATE CASCADE"))
     private UserScheduleEntity userScheduleEntity;
 
     @Column(name = "user_id",nullable = false )

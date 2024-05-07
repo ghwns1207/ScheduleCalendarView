@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,64 +7,124 @@
     <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js
-"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.11/index.global.min.js'></script>
     <link href="/css/calendarView.css" rel="stylesheet">
     <script src="/js/calendarView.js"></script>
-
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
 </head>
 <body>
 
-<div id='calendar-container'>
-    <div id='calendar'></div>
+<div id="calendar-container">
+    <div id="calendar"></div>
 </div>
 
-
-<div id="myModal" class="modal">
+<div id="myModal" class="modal main1">
     <div class="modal-content">
         <span id="close" class="close">&times;</span>
-        <div>
+        <div class="main-table">
             <h2>일정 추가</h2>
             <table>
                 <tr>
-                    <td><label for="category">카테고리</label></td>
-                    <td>
-                        <select name="category" id="category">
-                        </select>
+                    <td class="calendar-category">
+                        <div class="calendar-category-container">
+                            <div class="calender-category-container-box">
+                                <img src="/images/category.png" alt="카테고리아이콘 이미지"/>
+                                <label for="category" class="calendar-category-title">카테고리</label>
+                            </div>
+                            <select name="category" id="category" class="calendar-category-select"></select>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>색상</td>
-                    <td>
-                        <input type="radio" id="color1" name="color" value="#162855" checked>
-                        <label for="color1" style="background-color: #162855; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
-
-                        <input type="radio" id="color2" name="color" value="#6a5acd">
-                        <label for="color2" style="background-color: #6a5acd; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+                    <td class="calendar-color">
+                        <div class="calendar-color-container">
+                            <div class="calendar-color-box1">
+                                <img src="/images/color.png" alt="색상 이미지"/>
+                                <label class="calendar-color-title">색상</label>
+                            </div>
+                            <div class="calendar-color-box2">
+                                <input type="radio" id="color1" name="color" value="#162855" checked />
+                                <label for="color1" style="
+                        background-color: #162855;
+                        border-radius: 50%;
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        margin: 12px 12px 0 6px;
+                      " class="calendar-color-1"></label>
+                                <input type="radio" id="color2" name="color" value="#6a5acd"/>
+                                <label for="color2" style="
+                        background-color: #6a5acd;
+                        border-radius: 50%;display: inline-block; width: 20px; height: 20px; margin: 12px 0 0 6px; "></label>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="title">제목</label></td>
-                    <td><input type="text" placeholder="제목을 입력하세요." id="title" name="title"></td>
+                    <td class="calendar-name">
+                        <div class="calendar-name-container">
+                            <div class="calendar-name-container-box">
+                                <img src="/images/memo.png" alt="메모아이콘 이미지"/><label for="title" class="calender-name-title">제목</label>
+                            </div>
+                            <input type="text" placeholder="제목을 입력하세요." id="title" name="title" class="calender-name-text"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="allDay">하루일정 </label></td>
-                    <td><input type="checkbox" role="switch" id="allDay"></td>
+                    <td class="calendar-all-day">
+                        <div class="calendar-all-day-container">
+                            <div class="calendar-all-day-container-box">
+                                <img src="/images/clock.png" alt="시간아이콘 이미지"/>
+                                <label for="allDay" class="calendar-all-day-text">하루일정
+                                </label>
+                            </div>
+                            <input type="checkbox" role="switch" id="allDay" class="calender-all-day-checkbox"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="repetition">반복</label></td>
-                    <td><input type="checkbox" id="repetition"></td>
+                    <td class="calendar-repetition">
+                        <div class="calendar-repetition-container">
+                            <div class="calendar-repetition-container-box">
+                                <img src="/images/rotation.png" alt="장소 아이콘 이미지"/><label
+                                    for="repetition"
+                                    class="calendar-repetition-title">반복</label>
+                            </div>
+                            <input type="checkbox" id="repetition" class="calendar-repetition-title"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="location">장소</label></td>
-                    <td><input type="text" placeholder="장소를 입력하세요." id="location"></td>
+                    <td class="calendar-location">
+                        <div class="calendar-location-container">
+                            <div class="calendar-location-container-box">
+                                <img src="/images/location.png" alt="장소아이콘 이미지"/>
+                                <label for="location" class="calender-location-title">장소</label>
+                            </div>
+                            <input type="text" placeholder="장소를 입력하세요." id="location" class="calender-location-text"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="participant">참석자</label></td>
-                    <td> <select name="participant" id="participant">
-                        <option selected>참석자 선택해주세요.</option>
-                    </select>
-                        <button id = "addParticipant" onclick="addParticipants()">추가</button></td>
+                    <td class="calendar-participant">
+                        <div class="calendar-participant-container">
+                            <div class="calendar-participant-container-box1">
+                                <img src="/images/human.png" alt="아이콘 이미지"/>
+                                <label for="participant" class="calendar-participant-title">참석자</label>
+                            </div>
+                            <!--box1/-->
+                            <div class="calendar-participant-container-box2">
+                                <select name="participant" id="participant" class="calendar-participant-select">
+                                    <option selected>참석자 선택해주세요.</option>
+                                </select>
+                                <button id="addParticipant" onclick="addParticipants()" class="calendar-participant-button">
+                                    추가
+                                </button>
+                            </div>
+                            <!--box2/-->
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -74,21 +134,53 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="start">시작시간</label></td>
-                    <td><input type="datetime-local" id="start" name="start"></td>
+                    <td class="calendar-start">
+                        <div class="calendar-start-container">
+                            <div class="calendar-start-container-box">
+                                <img src="/images/clock.png" alt=""/>
+                                <label for="start" class="calendar-start-title">시작시간</label>
+                            </div>
+                            <input type="datetime-local" id="start" name="start" class="calendar-start-date"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="end">종료시간</label></td>
-                    <td><input type="datetime-local" id="end" name="end"></td>
+                    <td class="calendar-end">
+                        <div class="calendar-end-container">
+                            <div class="calendar-end-container-box">
+                                <img src="/images/clock.png" alt=""/>
+                                <label for="end" class="calendar-end-title">종료시간</label>
+                            </div>
+                            <input type="datetime-local" id="end" name="end" class="calendar-end-date"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="description">메모 </label></td>
-                    <td><textarea  style="height: 50px;" placeholder="내용 입력하세요." id="description"></textarea></td>
+                    <td class="calendar-memo">
+                        <div class="calendar-memo-container">
+                            <div class="calendar-memo-container-box">
+                                <img src="/images/memo.png" alt=""/>
+                                <label for="description" class="calendar-memo-title"
+                                >메모
+                                </label>
+                            </div>
+                            <textarea
+                                    style="height: 50px"
+                                    placeholder="내용 입력하세요."
+                                    id="description"
+                                    class="calender-memo-text"
+                            ></textarea>
+                        </div>
+                    </td>
                 </tr>
             </table>
+<!--            <div>-->
+<!--                <button onclick="changeToDay()" type="button">월</button>-->
+<!--                <button onclick="changeToWeek()"  type="button">주</button>-->
+<!--                <button onclick="changeToMonth()"type="button">일</button>-->
+<!--            </div>-->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">
-                    취소
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">취소
                 </button>
                 <button type="button" class="btn btn-primary" id="saveChanges">
                     추가
@@ -98,107 +190,142 @@
     </div>
 </div>
 
-<!-- 일정 수정 모달 -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <span id="closeEditModal" class="close">&times;</span>
-        <div>
-            <!-- 수정 폼 -->
-            <h2>일정 수정</h2><span id = "editModalName"></span>
-            <table id="scheduleTable">
-                <thead>
-                <tr>
-                    <th>카테고리</th>
-                    <th>제목</th>
-                    <th>하루일정</th>
-                    <th>장소</th>
-                    <th>메모</th>
-                    <th>참석자</th>
-                    <th>시작시간</th>
-                    <th>종료시간</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody id="scheduleBody">
-                <!-- User schedules will be added here dynamically -->
-                </tbody>
-            </table>
-            <!-- 수정 및 삭제 버튼 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 새로운 모달 -->
-<div id="eventInfoModal" class="modal" style="display: none;">
+<div id="eventInfoModal" class="modal" style="display: none">
     <div class="modal-content">
         <span id="closeEventInfoModal" class="close">&times;</span>
         <div>
             <!-- 내용 추가 -->
-            <h2>일정 정보</h2>
+            <h2 id="scheduleInName"></h2>
             <table id="scheduleInfoTable">
                 <thead>
+                <tr><th colspan="2" >일정 정보</th></tr>
                 <tr>
                     <th>카테고리</th>
+                    <td id="upCa"></td>
+                </tr>
+                <tr>
                     <th>제목</th>
+                    <td id="upTit"></td>
+                </tr>
+                <tr>
                     <th>하루일정</th>
+                    <td id="upDay"></td>
+                </tr>
+                <tr>
                     <th>장소</th>
+                    <td id="upLoca"></td>
+                </tr>
+                <tr>
                     <th>참석자</th>
+                    <td id="upPar"></td>
+                </tr>
+                <tr>
                     <th>시작시간</th>
+                    <td id="upStart"></td>
+                </tr>
+                <tr>
                     <th>종료시간</th>
+                    <td id="upEnd"></td>
+                </tr>
+                <tr>
                     <th>메모</th>
+                    <td id="upMemo"></td>
                 </tr>
                 </thead>
-                <tbody id="scheduleInfoBody">
-                </tbody>
             </table>
+        </div>
+        <div id="updateSchInfo" class="modal-footer ">
+
         </div>
     </div>
 </div>
 
-<div id="updateModal" class="modal">
+<div id="updateModal" class="modal main3">
     <div class="modal-content">
         <span id="updateClose" class="close">&times;</span>
-        <div>
+        <div class="main-table">
             <h2>일정 수정</h2>
             <table>
                 <tr>
-                    <td><label for="category">카테고리</label></td>
-                    <td>
-                        <select name="category" id="updateCategory">
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>색상</td>
-                    <td>
-                        <input type="radio" id="updateColor1" name="color" value="#162855" checked>
-                        <label for="updateColor1" style="background-color: #162855; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+                    <td class="calendar-category">
+                        <div class="calendar-category-container">
+                            <div class="calender-category-container-box">
+                                <img src="/images/category.png" alt="/">
+                                <label for="category" class="calendar-category-title">카테고리</label>
+                            </div>
 
-                        <input type="radio" id="updateColor2" name="color" value="#6a5acd">
-                        <label for="updateColor2" style="background-color: #6a5acd; border-radius: 50%; display: inline-block; width: 20px; height: 20px;"></label>
+                            <select name="category" id="updateCategory" class="calendar-category-select">
+
+                            </select>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="updateTitle">제목</label></td>
-                    <td><input type="text" placeholder="제목을 입력하세요." id="updateTitle" name="title"></td>
+                    <td class="calendar-color">
+                        <div class="calendar-color-container">
+                            <div class="calendar-color-box1">
+                                <img src="/images/color.png" alt="색상아이콘 이미지"/>
+                                <label class="calendar-color-title">색상</label>
+                            </div>
+                            <div class="calendar-color-box2">
+                                <input type="radio" id="updateColor1" name="color" value="#162855" checked/>
+                                <label for="updateColor1" style="background-color: #162855;border-radius: 50%;display: inline-block;width: 20px; height: 20px;margin: 12px 12px 0 6px;" class="calendar-color-1"></label>
+
+                                <input type="radio" id="updateColor2" name="color" value="#6a5acd"/>
+                                <label for="updateColor2" style=" background-color: #6a5acd;border-radius: 50%; display: inline-block; width: 20px;height: 20px;margin: 12px 0 0 6px;"></label>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="updateAllDay">하루일정 </label></td>
-                    <td><input type="checkbox" role="switch" id="updateAllDay"></td>
+                    <td class="calendar-name">
+                        <div class="calendar-name-container">
+                            <div class="calendar-name-container-box">
+                                <img src="/images/memo.png" alt="메모아이콘 이미지"/><label for="updateTitle" class="calender-name-title">제목</label>
+                            </div>
+                            <input type="text" placeholder="제목을 입력하세요." id="updateTitle" name="title" class="calender-name-text"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="updateLocation">장소</label></td>
-                    <td><input type="text" placeholder="장소를 입력하세요." id="updateLocation"></td>
+                    <td class="calendar-all-day">
+                        <div class="calendar-all-day-container">
+                            <div class="calendar-all-day-container-box">
+                                <img src="/images/clock.png" alt="시간아이콘 이미지"/><label for="updateAllDay" class="calendar-all-day-text">하루일정</label>
+                            </div>
+                            <input type="checkbox" role="switch" id="updateAllDay" class="calender-all-day-checkbox"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="updateParticipant">참석자</label></td>
-                    <td> <select name="participant" id="updateParticipant">
-                        <option selected>참석자 선택해주세요.</option>
-                    </select>
-                        <button id = "updateAddParticipant" onclick="updateParticipant()">추가</button></td>
+                    <td class="calendar-location">
+                        <div class="calendar-location-container">
+                            <div class="calendar-location-container-box">
+                                <img src="/images/location.png" alt="장소아이콘 이미지"/><label for="updateLocation" class="calender-location-title">장소</label>
+                            </div>
+                            <input type="text" placeholder="장소를 입력하세요." id="updateLocation" class="calender-location-text"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="calendar-participant">
+                        <div class="calendar-participant-container">
+                            <div class="calendar-participant-container-box1">
+                                <img src="/images/human.png" alt="아이콘 이미지"/><label for="updateParticipant" class="calendar-participant-title">참석자</label>
+                            </div>
+                            <!--box1/-->
+                            <div class="calendar-participant-container-box2">
+                                <select name="participant" id="updateParticipant" class="calendar-participant-select">
+                                    <option selected>참석자 선택해주세요.</option>
+                                </select>
+                                <button id="updateAddParticipant" onclick="updateParticipant()" class="calendar-participant-button">
+                                    추가
+                                </button>
+                            </div>
+                            <!--box2/-->
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -208,22 +335,50 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="updateStart">시작시간</label></td>
-                    <td><input type="datetime-local" id="updateStart" name="start"></td>
+                    <td class="calendar-start">
+                        <div class="calendar-start-container">
+                            <div class="calendar-start-container-box">
+                                <img src="/images/clock.png" alt=""/><label for="updateStart" class="calendar-start-title">시작시간</label>
+                            </div>
+                            <input type="datetime-local" id="updateStart" name="start" class="calendar-start-date"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="updateEnd">종료시간</label></td>
-                    <td><input type="datetime-local" id="updateEnd" name="end"></td>
+                    <td class="calendar-end">
+                        <div class="calendar-end-container">
+                            <div class="calendar-end-container-box">
+                                <img src="/images/clock.png" alt=""/><label for="updateEnd" class="calendar-end-title">종료시간</label>
+                            </div>
+                            <input type="datetime-local" id="updateEnd" name="end" class="calendar-end-date"/>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td><label for="updatedDescription">메모 </label></td>
-                    <td><textarea  style="height: 50px;" placeholder="내용 입력하세요." id="updatedDescription"></textarea></td>
+                    <td class="calendar-memo">
+                        <div class="calendar-memo-container">
+                            <div class="calendar-memo-container-box">
+                                <img src="/images/memo.png" alt=""/>
+                                <label for="updatedDescription" class="calendar-memo-title">메모
+                                </label>
+                            </div>
+                            <textarea style="height: 50px" placeholder="내용 입력하세요." id="updatedDescription" class="calender-memo-text"></textarea>
+                        </div>
+                    </td>
                 </tr>
             </table>
-            <div class="modal-footer">
+            <div id="updateModal-footer" class= "modal-footer">
             </div>
         </div>
     </div>
 </div>
+<div id="adminBtn">
+
+</div>
+
+<footer>
+    <div class="footer-text">ⓒ 2024 MK Gloria All Rights Reserved</div>
+</footer>
+
 </body>
 </html>

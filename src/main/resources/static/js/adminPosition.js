@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 createPositionRow(resData.data);
             } else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             } else if (resData.resultCode === "204") {
                 alert(resData.errorMessage);
                 const positionBody = document.getElementById("positionBody");
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
         })
 });
 
@@ -168,7 +168,7 @@ function editPosition(id,position){
                 createPositionRow(resData.data);
             }else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }else{
                 alert(resData.errorMessage);
             }
@@ -178,6 +178,11 @@ function editPosition(id,position){
         })
 
 }
+
+
+document.getElementById("backBtn").addEventListener('click',function (){
+    window.history.back();
+})
 
 function addBtnCen(){
     document.getElementById("addPosition").value ="";
@@ -218,7 +223,7 @@ function addBtnSave(){
                 createPositionRow(resData.data);
             }else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }else{
                 alert(resData.errorMessage);
             }

@@ -1,4 +1,4 @@
-package com.mkgloria.ScheduleCalendarView.user.modle;
+package com.mkgloria.ScheduleCalendarView.user.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

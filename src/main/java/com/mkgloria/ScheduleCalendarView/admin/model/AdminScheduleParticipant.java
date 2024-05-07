@@ -2,7 +2,7 @@ package com.mkgloria.ScheduleCalendarView.admin.model;
 
 import com.mkgloria.ScheduleCalendarView.schedule.model.ScheduleParticipantEntity;
 import com.mkgloria.ScheduleCalendarView.schedule.model.UserScheduleEntity;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
+import com.mkgloria.ScheduleCalendarView.user.model.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

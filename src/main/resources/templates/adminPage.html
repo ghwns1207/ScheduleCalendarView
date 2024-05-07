@@ -7,18 +7,42 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script defer src="/js/adminPage.js"></script>
-    <link  rel="stylesheet" href="/css/adminPage.css">
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/adminPage.css">
 </head>
 <body>
+<main>
+    <div class="background-image">
+        <img src="/images/jworksmedia-logo.png" alt="로고 이미지"/>
+    </div>
+    <div id="admin_pageMain_div" class="mypage-container">
+        <p class="user-class">Developer</p>
+        <h2 id="userName" class="user-name"></h2>
+        <div id="mainDiv" class="main-button-container">
+            <div>
+                <button class="mainbutton" id="addUserBtn">회원추가</button>
+            </div>
+<!--            <div>-->
+<!--                <button class="mainbutton" id="scheduleBtn">일정 추가/삭제</button>-->
+<!--            </div>-->
+            <div>
+                <button class="mainbutton" id="category">카테고리</button>
+            </div>
+            <div>
+                <button class="mainbutton" id="position">직급</button>
+            </div>
+            <div>
+                <button class="mainbutton" id="userInfoBtn">회원정보</button>
+            </div>
+            <div>
+                <button class="mainbutton" id="moveCal">캘린더</button>
+            </div>
+        </div>
+    </div>
+</main>
 
-
-<div id="admin_pageMain_div">
-    <h2 id="userName"></h2>
-    <div><button id="addUserBtn">회원추가</button></div>
-    <div><button id="scheduleBtn">일정 추가/삭제</button></div>
-    <div><button id="category">카테고리</button></div>
-    <div><button id="position">직급</button></div>
-    <div><button id="userInfoBtn">회원정보</button></div>
-</div>
+<footer>
+    <div class="footer-text">ⓒ 2024 MK Gloria All Rights Reserved</div>
+</footer>
 </body>
 </html>

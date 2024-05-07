@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class MainController {
     private final JwtUtil jwtUtil;
-    @GetMapping(path = {"/index", "","/"})
+    @GetMapping(path = {"/admin/adminInfo"})
     public String mainPage(){
         return "index";
     }

@@ -1,4 +1,4 @@
-package com.mkgloria.ScheduleCalendarView.user.modle;
+package com.mkgloria.ScheduleCalendarView.user.model;
 
 
 
@@ -31,11 +31,15 @@ public class UserEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false,
+            foreignKey = @ForeignKey(name = "FK_user_role_id",
+                    foreignKeyDefinition = "FOREIGN KEY (`role_id`) REFERENCES `user_role` (`role_id`) ON UPDATE CASCADE"))
     private UserRoleEntity userRole;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "position_id", referencedColumnName = "position_id", nullable = false)
+    @JoinColumn(name = "position_id", referencedColumnName = "position_id", nullable = false,
+            foreignKey = @ForeignKey(name = "FK_user_position_id",
+                    foreignKeyDefinition = "FOREIGN KEY (`position_id`) REFERENCES `user_position` (`position_id`) ON UPDATE CASCADE"))
     private UserPositionEntity userPosition;
 
     @Column(name = "user_id", nullable = false)
@@ -60,7 +64,6 @@ public class UserEntity {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt;

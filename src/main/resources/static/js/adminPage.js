@@ -26,25 +26,24 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(resData => {
             if(resData.resultCode === "200"){
-                console.log(resData.data)
                 let userInfo = resData.data;
                 document.getElementById("userName").innerText= userInfo.user_name;
             }else if (resData.resultCode === "403 "){
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         });
 });
 
 document.getElementById("addUserBtn").addEventListener("click",function() {
     window.location.assign("/admin/signUp");
 });
-document.getElementById("scheduleBtn").addEventListener("click",function() {
-    window.location.assign("/admin/schedule");
-});
+// document.getElementById("scheduleBtn").addEventListener("click",function() {
+//     window.location.assign("/admin/schedule");
+// });
 document.getElementById("category").addEventListener("click",function() {
     window.location.assign("/admin/category");
 });
@@ -53,4 +52,8 @@ document.getElementById("position").addEventListener("click",function() {
 });
 document.getElementById("userInfoBtn").addEventListener("click",function() {
     window.location.assign("/admin/userInfo");
+});
+
+document.getElementById("moveCal").addEventListener("click",function() {
+    window.location.assign("/user/calendarView");
 });

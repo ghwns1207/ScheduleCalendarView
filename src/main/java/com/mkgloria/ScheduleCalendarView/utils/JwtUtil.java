@@ -2,23 +2,19 @@ package com.mkgloria.ScheduleCalendarView.utils;
 
 
 import com.mkgloria.ScheduleCalendarView.config.auth.PrincipalDetails;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.IllformedLocaleException;
@@ -50,6 +46,7 @@ public class JwtUtil {
         claims.put("user_id", user.getUser().getUser_id());
         claims.put("user_name", user.getUser().getUser_name());
         claims.put("userRole", user.getUser().getUserRole());
+        claims.put("userPosition",user.getUserPosition());
 
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tokenValidity = now.plusSeconds(expirationTime);
@@ -77,6 +74,7 @@ public class JwtUtil {
                 .user_id(claims.get("user_id", String.class))
                 .user_name(claims.get("user_name", String.class))
                 .userRole(claims.get("userRole" , String.class))
+                .userPositionName(claims.get("userPosition",String.class))
                 .build();
     }
 

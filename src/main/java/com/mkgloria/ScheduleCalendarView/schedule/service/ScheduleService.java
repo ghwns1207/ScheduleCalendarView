@@ -5,13 +5,12 @@ import com.mkgloria.ScheduleCalendarView.schedule.repository.ParticipantReposito
 import com.mkgloria.ScheduleCalendarView.schedule.repository.ScheduleRepository;
 import com.mkgloria.ScheduleCalendarView.scheduleCategory.model.ScheduleCategoryEntity;
 import com.mkgloria.ScheduleCalendarView.scheduleCategory.repository.ScheduleCategoryRepository;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
+import com.mkgloria.ScheduleCalendarView.user.model.UserEntity;
 import com.mkgloria.ScheduleCalendarView.user.repository.UserRepository;
 import com.mkgloria.ScheduleCalendarView.utils.Api;
 import com.mkgloria.ScheduleCalendarView.utils.ApiResponseUtil;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,7 +31,7 @@ public class ScheduleService {
     private final ScheduleCategoryRepository scheduleCategoryRepository;
     private final ParticipantRepository participantRepository;
 
-    public Api updateSchedule(EventDataDTO eventDataDTO,String scheduleId, String dateTime, UserDTO userDTO ){
+    public Api updateSchedule(EventDataDTO eventDataDTO,String scheduleId){
         try {
             Optional<UserScheduleEntity> userScheduleEntity= scheduleRepository.findById(Long.valueOf(scheduleId));
             if(userScheduleEntity.isEmpty()){
@@ -69,10 +69,8 @@ public class ScheduleService {
 
             UserScheduleEntity saveScheduleEntity = scheduleRepository.save(updateUserSchedule);
 
-            UserScheduleParticipantDTO scheduleParticipantDTO= this.retrievesIdSchedule(userDTO, dateTime);
-
             log.info("saveScheduleEntity :{}", saveScheduleEntity);
-            return ApiResponseUtil.successResponse(HttpStatus.OK, scheduleParticipantDTO);
+            return ApiResponseUtil.successResponse(HttpStatus.OK, "일정을 수정했습니다.");
         }catch (Exception e){
             log.error("updateSchedule : {}",e.getMessage());
             return ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 문제가 생겼습니다");
@@ -91,7 +89,7 @@ public class ScheduleService {
             UserScheduleDTO userScheduleDTO = UserScheduleDTO
                     .builder()
                     .userDTO(userDTO)
-                    .userScheduleEntityList(userScheduleEntityList.get())
+                    //.userScheduleEntityList(userScheduleEntityList.get())
                     .build();
 
             log.info("userScheduleDTO: {}", userScheduleDTO);
@@ -105,7 +103,7 @@ public class ScheduleService {
         }
     }
 
-    public UserScheduleEntity retrieveScheduleByScheduleId(UserDTO userDTO, String scheduleId){
+    public UserScheduleEntity retrieveScheduleByScheduleIdAndUserId(UserDTO userDTO, String scheduleId){
         try {
             UserScheduleEntity userScheduleEntity = scheduleRepository.findByUserEntity_IdAndScheduleId(userDTO.getId(), Long.valueOf(scheduleId));
             log.info("userScheduleEntity : {}",userScheduleEntity);
@@ -113,6 +111,30 @@ public class ScheduleService {
                 return null;
             }
             return userScheduleEntity;
+        }catch (Exception e){
+            log.error("retrieveScheduleByScheduleId : {}",e.getMessage());
+            return null;
+        }
+    }
+
+    public UserScheduleInfo retrieveScheduleByScheduleId( String scheduleId){
+        try {
+            Optional<UserScheduleEntity> userScheduleEntity = scheduleRepository.findById( Long.valueOf(scheduleId));
+            log.info("userScheduleEntity : {}",userScheduleEntity);
+
+            return userScheduleEntity.map(scheduleEntity -> UserScheduleInfo.builder()
+                    .userId(scheduleEntity.getUserEntity().getId())
+                    .userName(scheduleEntity.getUserEntity().getUserName())
+                    .scheduleId(scheduleEntity.getScheduleId())
+                    .scheduleCategoryEntity(scheduleEntity.getScheduleCategoryEntity())
+                    .title(scheduleEntity.getTitle())
+                    .description(scheduleEntity.getDescription())
+                    .location(scheduleEntity.getLocation())
+                    .color(scheduleEntity.getColor())
+                    .start(scheduleEntity.getStart())
+                    .end(scheduleEntity.getEnd())
+                    .all_day(scheduleEntity.isAll_day())
+                    .build()).orElse(null);
         }catch (Exception e){
             log.error("retrieveScheduleByScheduleId : {}",e.getMessage());
             return null;
@@ -142,10 +164,27 @@ public class ScheduleService {
             if(userScheduleEntityList.isEmpty()){
                 return null;
             }
+            List<UserScheduleInfo> userScheduleInfos = userScheduleEntityList.map(scheduleEntities ->
+                            scheduleEntities.stream()
+                                    .map(scheduleEntity -> UserScheduleInfo.builder()
+                                            .userId(scheduleEntity.getUserEntity().getId())
+                                            .userName(scheduleEntity.getUserEntity().getUserName())
+                                            .scheduleId(scheduleEntity.getScheduleId())
+                                            .scheduleCategoryEntity(scheduleEntity.getScheduleCategoryEntity())
+                                            .title(scheduleEntity.getTitle())
+                                            .description(scheduleEntity.getDescription())
+                                            .location(scheduleEntity.getLocation())
+                                            .color(scheduleEntity.getColor())
+                                            .start(scheduleEntity.getStart())
+                                            .end(scheduleEntity.getEnd())
+                                            .all_day(scheduleEntity.isAll_day())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                    .orElse(null);
             UserScheduleDTO userScheduleDTO = UserScheduleDTO
                     .builder()
                     .userDTO(userDTO)
-                    .userScheduleEntityList(userScheduleEntityList.get())
+                    .userScheduleInfos(userScheduleInfos)
                     .build();
 
             log.info("userScheduleDTO: {}", userScheduleDTO);
@@ -154,45 +193,6 @@ public class ScheduleService {
 
         }catch (Exception e){
             log.error("retrievesSchedule : {}",e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public UserScheduleParticipantDTO retrievesIdSchedule(UserDTO userDTO, String dateTime){
-        try {
-            LocalDateTime time = LocalDateTime.parse(dateTime.replace("Z",""));
-            LocalDateTime startTime = time.minusMonths(1);
-            LocalDateTime endTime = time.plusMonths(1);
-
-            Optional<List<UserScheduleEntity>> scheduleEntities =
-                    scheduleRepository.findAllByAndUserEntity_IdAndStartBetweenOrEndBetween(userDTO.getId(),startTime, endTime, startTime, endTime);
-            if (scheduleEntities.isEmpty()) {
-                return null;
-            }
-
-            List<UserScheduleParticipant> scheduleParticipantsList = new ArrayList<>();
-            scheduleEntities.ifPresent(schedules -> {
-                for (UserScheduleEntity schedule : schedules) {
-                    Optional<List<ScheduleParticipantEntity>> participantEntities = participantRepository.findAllByUserScheduleEntity(schedule);
-                    UserScheduleParticipant scheduleParticipant = UserScheduleParticipant.builder()
-                            .userScheduleEntity(schedule)
-                            .participantEntities(participantEntities.get())
-                            .build();
-                    scheduleParticipantsList.add(scheduleParticipant);
-                }
-            });
-
-            UserScheduleParticipantDTO scheduleParticipantDTO = UserScheduleParticipantDTO.builder()
-                    .userDTO(userDTO)
-                    .userScheduleParticipants(scheduleParticipantsList)
-                    .build();
-
-
-            log.info("userScheduleDTO : {}",scheduleParticipantDTO);
-
-            return scheduleParticipantDTO;
-        }catch (Exception e){
-            log.error("retrievesIdSchedule: {}", e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -296,11 +296,11 @@ public class ScheduleService {
         }
     }
 
-    public List<ScheduleParticipantEntity> retrievesParticipant(UserScheduleEntity userScheduleEntity){
+    public List<ScheduleParticipantEntity> retrievesParticipant(Long scheduleId){
 
         try {
             Optional<List<ScheduleParticipantEntity>> participantEntities =
-                    participantRepository.findAllByUserScheduleEntity(userScheduleEntity);
+                    participantRepository.findAllByUserScheduleEntityScheduleId(scheduleId);
             return participantEntities.orElse(null);
         }catch (Exception e){
             log.error("retrievesParticipant : {}", e.getMessage());

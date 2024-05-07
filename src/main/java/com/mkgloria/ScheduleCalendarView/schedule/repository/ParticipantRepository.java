@@ -15,9 +15,11 @@ import java.util.Optional;
 public interface ParticipantRepository extends JpaRepository<ScheduleParticipantEntity ,Long> {
 
 
+    Optional<List<ScheduleParticipantEntity>> findAllByUserScheduleEntityScheduleId(Long scheduleId);
+
     Optional<List<ScheduleParticipantEntity>> findAllByUserScheduleEntity(UserScheduleEntity userScheduleEntity);
 
-    int deleteScheduleParticipantEntitiesByUserScheduleEntityScheduleId(Long ScheduleId);
+    int deleteScheduleParticipantEntitiesByUserScheduleEntityScheduleId(Long scheduleId);
 
 
 }

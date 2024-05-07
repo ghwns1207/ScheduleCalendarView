@@ -1,9 +1,8 @@
-package com.mkgloria.ScheduleCalendarView.user.modle;
+package com.mkgloria.ScheduleCalendarView.user.model;
 
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mkgloria.ScheduleCalendarView.userRole.model.UserRoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +22,8 @@ public class UserDTO {
     private String user_name;
 
     private String userRole;
+
+    private String userPositionName;
 
     @JsonIgnore
     private String user_password;

@@ -3,12 +3,10 @@ package com.mkgloria.ScheduleCalendarView.admin.admincontroller;
 
 import com.mkgloria.ScheduleCalendarView.admin.adminService.AdminService;
 import com.mkgloria.ScheduleCalendarView.admin.model.AdminScheduleParticipantDTO;
-import com.mkgloria.ScheduleCalendarView.schedule.model.UserScheduleParticipantDTO;
 import com.mkgloria.ScheduleCalendarView.scheduleCategory.model.ScheduleCategoryEntity;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserSignUpDTO;
-import com.mkgloria.ScheduleCalendarView.user.service.UserService;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
+import com.mkgloria.ScheduleCalendarView.user.model.UserEntity;
+import com.mkgloria.ScheduleCalendarView.user.model.UserSignUpDTO;
 import com.mkgloria.ScheduleCalendarView.userPosition.model.UserPositionEntity;
 import com.mkgloria.ScheduleCalendarView.utils.Api;
 import com.mkgloria.ScheduleCalendarView.utils.ApiResponseUtil;
@@ -21,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,6 +56,32 @@ public class AdminRestController {
         }
     }
 
+    @GetMapping("/checkUserId/duplicateUserId/{userId}")
+    public ResponseEntity<Api> duplicateUserId(@PathVariable(name = "userId") String userId, @RequestHeader HttpHeaders headers) {
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "다시 로그인 해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            log.info("userDto : {}", userDTO);
+            if (userDTO == null) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            }
+            HttpStatus httpStatus = adminService.duplicateUserId(userId);
+            return switch (httpStatus) {
+                case OK -> ResponseEntity.ok().body(ApiResponseUtil.successResponse(httpStatus, "사용 가능한 아이디입니다."));
+                case CONFLICT ->
+                        ResponseEntity.ok().body(ApiResponseUtil.successResponse(httpStatus, "이미 사용중인 아이디입니다."));
+                default -> ResponseEntity.ok().body(ApiResponseUtil.successResponse(httpStatus, "서버에 문제가 생겼습니다."));
+            };
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(
+                    ApiResponseUtil.failureResponse(HttpStatus.SERVICE_UNAVAILABLE, "서버에 문제가 생겼습니다."));
+        }
+    }
+
+
     @GetMapping("/scheduleCategory/retrievesScheduleCategory")
     public ResponseEntity<Api> retrievesAdminCategory(@RequestHeader HttpHeaders headers) {
         try {
@@ -83,8 +106,8 @@ public class AdminRestController {
     }
 
     @GetMapping("/scheduleCategory/addScheduleCategory/{addCategory}")
-    public  ResponseEntity<Api> addScheduleCategory(@RequestHeader HttpHeaders headers,
-                                                    @PathVariable(name = "addCategory")String categoryName){
+    public ResponseEntity<Api> addScheduleCategory(@RequestHeader HttpHeaders headers,
+                                                   @PathVariable(name = "addCategory") String categoryName) {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
@@ -96,22 +119,22 @@ public class AdminRestController {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             ScheduleCategoryEntity scheduleCategoryEntity = adminService.addScheduleCategory(categoryName);
-            if(scheduleCategoryEntity == null){
+            if (scheduleCategoryEntity == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "입력 정보를 확인해주세요."));
             }
             List<ScheduleCategoryEntity> scheduleCategoryEntities = adminService.retrievesAdminCategory();
             return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, scheduleCategoryEntities));
-        }catch (Exception e){
-            log.error("admin addScheduleCategory : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("admin addScheduleCategory : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                     "서버에러 잠시 후 다시 시도해주세요."));
         }
     }
 
     @GetMapping("/scheduleCategory/editScheduleCategory/{id}/{category}")
-    public  ResponseEntity<Api> editScheduleCategory(@RequestHeader HttpHeaders headers,
-                                                    @PathVariable(name = "id")String categoryId,
-                                                     @PathVariable(name = "category")String category){
+    public ResponseEntity<Api> editScheduleCategory(@RequestHeader HttpHeaders headers,
+                                                    @PathVariable(name = "id") String categoryId,
+                                                    @PathVariable(name = "category") String category) {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
@@ -122,14 +145,14 @@ public class AdminRestController {
             if (userDTO == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
-            ScheduleCategoryEntity scheduleCategoryEntity = adminService.editScheduleCategory(categoryId,category);
-            if(scheduleCategoryEntity == null){
+            ScheduleCategoryEntity scheduleCategoryEntity = adminService.editScheduleCategory(categoryId, category);
+            if (scheduleCategoryEntity == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "입력 정보를 확인해주세요."));
             }
             List<ScheduleCategoryEntity> scheduleCategoryEntities = adminService.retrievesAdminCategory();
             return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, scheduleCategoryEntities));
-        }catch (Exception e){
-            log.error("admin addScheduleCategory : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("admin addScheduleCategory : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                     "서버에러 잠시 후 다시 시도해주세요."));
         }
@@ -184,9 +207,9 @@ public class AdminRestController {
     }
 
     @GetMapping("/schedulePosition/editSchedulePosition/{id}/{position}")
-    public  ResponseEntity<Api> editSchedulePosition(@RequestHeader HttpHeaders headers,
-                                                     @PathVariable(name = "id")String positionId,
-                                                     @PathVariable(name = "position")String position){
+    public ResponseEntity<Api> editSchedulePosition(@RequestHeader HttpHeaders headers,
+                                                    @PathVariable(name = "id") String positionId,
+                                                    @PathVariable(name = "position") String position) {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
@@ -197,22 +220,22 @@ public class AdminRestController {
             if (userDTO == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
-            UserPositionEntity userPosition = adminService.editSchedulePosition(positionId,position);
-            if(userPosition == null){
+            UserPositionEntity userPosition = adminService.editSchedulePosition(positionId, position);
+            if (userPosition == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "입력 정보를 확인해주세요."));
             }
             List<UserPositionEntity> userPositionEntities = adminService.retrievesPosition();
             return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, userPositionEntities));
-        }catch (Exception e){
-            log.error("admin addScheduleCategory : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("admin addScheduleCategory : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                     "서버에러 잠시 후 다시 시도해주세요."));
         }
     }
 
     @GetMapping("/schedulePosition/addSchedulePosition/{addPosition}")
-    public  ResponseEntity<Api> addSchedulePosition(@RequestHeader HttpHeaders headers,
-                                                    @PathVariable(name = "addPosition")String positionName){
+    public ResponseEntity<Api> addSchedulePosition(@RequestHeader HttpHeaders headers,
+                                                   @PathVariable(name = "addPosition") String positionName) {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
@@ -224,13 +247,13 @@ public class AdminRestController {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             UserPositionEntity userPosition = adminService.addSchedulePosition(positionName);
-            if(userPosition == null){
+            if (userPosition == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "입력 정보를 확인해주세요."));
             }
             List<UserPositionEntity> userPositionEntities = adminService.retrievesPosition();
             return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, userPositionEntities));
-        }catch (Exception e){
-            log.error("admin addScheduleCategory : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("admin addScheduleCategory : {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                     "서버에러 잠시 후 다시 시도해주세요."));
         }
@@ -263,5 +286,69 @@ public class AdminRestController {
         }
     }
 
+    @GetMapping("/scheduleUser/retrievesScheduleUser")
+    public ResponseEntity<Api> retrievesScheduleUser(@RequestHeader HttpHeaders headers) {
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "다시 로그인 해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            log.info("userDto : {}", userDTO);
+            if (userDTO == null) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            }
+            Api api = adminService.retrievesScheduleUser();
+            return ResponseEntity.ok().body(api);
+        } catch (Exception e) {
+            log.error("retrievesUserInfo : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "서버에러 잠시 후 다시 시도해주세요."));
+        }
+    }
+
+    @GetMapping("/scheduleUser/selectUserByName/{userName}")
+    public ResponseEntity<Api> selectUserByName(@RequestHeader HttpHeaders headers,
+                                                @PathVariable(name = "userName") String userName) {
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "다시 로그인 해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            log.info("userDto : {}", userDTO);
+            if (userDTO == null) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            }
+            Api api = adminService.selectUserByName(userName);
+            return ResponseEntity.ok().body(api);
+        } catch (Exception e) {
+            log.error("retrievesUserInfo : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "서버에러 잠시 후 다시 시도해주세요."));
+        }
+    }
+
+    @GetMapping("/scheduleUser/delScheduleUser/{userId}")
+    public ResponseEntity<Api> delScheduleUserByUserId(@RequestHeader HttpHeaders headers,
+                                                       @PathVariable(name = "userId") String userId) {
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "다시 로그인 해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            log.info("userDto : {}", userDTO);
+            if (userDTO == null) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            }
+            Api api = adminService.delScheduleUserByUserId(userId);
+            return ResponseEntity.ok().body(api);
+        } catch (Exception e) {
+            log.error("retrievesUserInfo : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "서버에러 잠시 후 다시 시도해주세요."));
+        }
+    }
 
 }

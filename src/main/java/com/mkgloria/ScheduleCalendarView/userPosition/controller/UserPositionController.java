@@ -1,6 +1,6 @@
 package com.mkgloria.ScheduleCalendarView.userPosition.controller;
 
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
 import com.mkgloria.ScheduleCalendarView.userPosition.model.UserPositionDTO;
 import com.mkgloria.ScheduleCalendarView.userPosition.model.UserPositionEntity;
 import com.mkgloria.ScheduleCalendarView.userPosition.service.UserPositionService;

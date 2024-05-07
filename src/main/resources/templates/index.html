@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mkalendar</title>
+    <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <!-- 파비콘 추가 -->
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
+    <link href="/css/index.css" rel="stylesheet">
     <script defer src="/js/index.js"></script>
 </head>
 <body>
-<!-- 모델에서 "username" 속성을 꺼내고 표시합니다. -->
-<p id="userName"></p>
+<main>
+    <div class="mypage-container">
+        <!-- 모델에서 "username" 속성을 꺼내고 표시합니다. -->
+        <p id="userName" class="user-name"></p>
+        <p id="userPosition" class="user-class"></p>
 
-<!-- 링크 역할을 하는 버튼 -->
-<button id="loginButton" class="loginButton">로그인</button>
 
-<button id="logoutBtn" style="display: none">로그아웃</button>
+        <div id="mainDiv" class="main-button-container">
+            <div id="calendar_div">
 
-<div id="mainDiv">
-    <div id="calendar_div">
+            </div>
+            <div id="adminPage_div">
 
+            </div>
+        </div>
+        <div class="title-logo">
+            <img src="/images/jworksmedia-logo.png" alt="미디어아이콘 이미지"/>
+        </div>
+        <div class="signin-button-container">
+            <!-- 링크 역할을 하는 버튼 -->
+            <button id="loginButton" class="mypagebutton">로그인</button>
+
+            <button id="logoutBtn" class="mypagebutton" style="display: none">로그아웃</button>
+        </div>
     </div>
-    <div id="adminPage_div">
+</main>
 
-    </div>
-</div>
-
-
-
+<footer>
+    <div class="footer-text">ⓒ 2024 MK Gloria All Rights Reserved</div>
+</footer>
 </body>
 </html>

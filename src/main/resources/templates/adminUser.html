@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+    <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+    <link href="/css/adminUser.css" rel="stylesheet">
+    <script defer src="/js/adminUser.js"></script>
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
+</head>
+<body>
+<div id="main_adminUser_div">
+    <h2>회원 정보</h2>
+    <button id="backBtn">뒤로가기</button>
+    <div id="selectUser_div">
+        <h3>회원 검색</h3>
+        <div>
+            <label for="selectUser_input">회원 이름 : </label>
+            <input type="text" id="selectUser_input" maxlength="10" placeholder="2자 이상 입력해주세여.">
+            <button id="selectUserBtn">검색</button>
+            <button onclick="selectAll()">전체 검색</button>
+        </div>
+
+
+    </div>
+    <div id="adminUser_table">
+        <table>
+            <thead>
+            <tr>
+                <th>이름</th>
+                <th>아이디</th>
+                <th>직급</th>
+                <th>권한</th>
+                <th>생년월일</th>
+                <th>생성 일</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody id="userBody">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

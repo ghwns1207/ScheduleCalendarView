@@ -2,7 +2,7 @@ package com.mkgloria.ScheduleCalendarView.schedule.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mkgloria.ScheduleCalendarView.scheduleCategory.model.ScheduleCategoryEntity;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
+import com.mkgloria.ScheduleCalendarView.user.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +26,15 @@ public class UserScheduleEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false ,
+            foreignKey = @ForeignKey(name = "FK_user_schedule_user_id",
+            foreignKeyDefinition = "FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE"))
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false ,
+            foreignKey = @ForeignKey(name = "FK_user_schedule_category_id",
+                    foreignKeyDefinition = "FOREIGN KEY (`category_id`) REFERENCES `schedule_category` (`category_id`) ON UPDATE CASCADE"))
     private ScheduleCategoryEntity scheduleCategoryEntity;
 
     @Column(name = "title", nullable = false)
@@ -42,7 +46,7 @@ public class UserScheduleEntity {
     @Column(name = "location")
     private String location;            // 장소
 
-    @Column(name = "color")
+    @Column(name = "color",  length = 11)
     private String color;
 
     @Column(name = "start_time", nullable = false)

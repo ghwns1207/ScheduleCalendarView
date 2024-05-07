@@ -2,7 +2,6 @@ package com.mkgloria.ScheduleCalendarView.config.handler;
 
 import com.mkgloria.ScheduleCalendarView.config.auth.PrincipalDetails;
 import com.mkgloria.ScheduleCalendarView.config.auth.PrincipalDetailsService;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
 import com.mkgloria.ScheduleCalendarView.utils.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -11,11 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -52,7 +48,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 
         // 리다이렉트할 URL에 JWT 토큰을 추가합니다.
-        String redirectUrl = "/index?jwt=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
+        String redirectUrl = "/user/calendarView?jwt=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
 
         // 원하는 대상 페이지로 리다이렉트합니다.
         response.sendRedirect(redirectUrl);

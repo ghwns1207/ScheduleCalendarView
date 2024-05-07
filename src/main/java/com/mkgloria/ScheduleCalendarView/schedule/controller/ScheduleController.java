@@ -3,11 +3,10 @@ package com.mkgloria.ScheduleCalendarView.schedule.controller;
 
 import com.mkgloria.ScheduleCalendarView.schedule.model.*;
 import com.mkgloria.ScheduleCalendarView.schedule.service.ScheduleService;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
 import com.mkgloria.ScheduleCalendarView.utils.Api;
 import com.mkgloria.ScheduleCalendarView.utils.ApiResponseUtil;
 import com.mkgloria.ScheduleCalendarView.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -35,7 +33,7 @@ public class ScheduleController {
         log.info("endTime: {}", endTime);
         String token = jwtUtil.resolveToken(headers);
         if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
         }
         UserDTO userDTO = jwtUtil.getUserInfo(token);
         log.info("userDto : {}", userDTO);
@@ -43,7 +41,7 @@ public class ScheduleController {
             return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
         }
         UserScheduleDTO userScheduleDTO = scheduleService.retrievesSchedule(userDTO, startTime, endTime);
-        if (userScheduleDTO.getUserScheduleEntityList().isEmpty()) {
+        if (userScheduleDTO.getUserScheduleInfos().isEmpty()) {
             return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
         }
         return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, userScheduleDTO));
@@ -54,17 +52,19 @@ public class ScheduleController {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             UserDTO userDTO = jwtUtil.getUserInfo(token);
             log.info("userDto : {}", userDTO);
-                UserScheduleEntity userScheduleEntity = scheduleService.retrieveScheduleByScheduleId(userDTO, scheduleId);
-            if (userScheduleEntity == null) {
+
+            UserScheduleInfo userScheduleInfo = scheduleService.retrieveScheduleByScheduleId(scheduleId);
+
+            if (userScheduleInfo == null) {
                 return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
             }
-            List<ScheduleParticipantEntity> participantEntities =  scheduleService.retrievesParticipant(userScheduleEntity);
+            List<ScheduleParticipantEntity> participantEntities =  scheduleService.retrievesParticipant(userScheduleInfo.getScheduleId());
             UserScheduleParticipant scheduleParticipant = UserScheduleParticipant.builder()
-                    .userScheduleEntity(userScheduleEntity)
+                    .UserScheduleInfo(userScheduleInfo)
                     .participantEntities(participantEntities)
                     .build();
 
@@ -77,12 +77,35 @@ public class ScheduleController {
         }
     }
 
+//    @GetMapping("/retrievesIdSchedule/{dateTime}")
+//    public ResponseEntity<Api> retrievesIdSchedule(@RequestHeader HttpHeaders headers, @PathVariable(name = "dateTime") String dateTime) {
+//        try {
+//            String token = jwtUtil.resolveToken(headers);
+//            if (!jwtUtil.validateToken(token)) {
+//                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+//            }
+//            UserDTO userDTO = jwtUtil.getUserInfo(token);
+//            UserScheduleParticipantDTO scheduleParticipantDTO = scheduleService.retrievesIdSchedule(, dateTime);
+//
+//            if (scheduleParticipantDTO == null) {
+//                return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
+//            }
+//            return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, scheduleParticipantDTO));
+//
+//        } catch (Exception e) {
+//            log.error("addSchedule :{}", e.getMessage());
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                    ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요."));
+//        }
+//    }
+
     @PostMapping("/addSchedule")
     public ResponseEntity<Api> addSchedule(@RequestHeader HttpHeaders headers, @RequestBody EventDataDTO eventDataDTO) {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             UserDTO userDTO = jwtUtil.getUserInfo(token);
             log.info("userDto : {}", userDTO);
@@ -110,7 +133,7 @@ public class ScheduleController {
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             log.info(scheduleId);
             boolean delSchedule = scheduleService.delSchedule(scheduleId);
@@ -126,41 +149,18 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/retrievesIdSchedule/{dateTime}")
-    public ResponseEntity<Api> retrievesIdSchedule(@RequestHeader HttpHeaders headers, @PathVariable(name = "dateTime") String dateTime) {
-        try {
-            String token = jwtUtil.resolveToken(headers);
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
-            }
-            UserDTO userDTO = jwtUtil.getUserInfo(token);
-            UserScheduleParticipantDTO scheduleParticipantDTO = scheduleService.retrievesIdSchedule(userDTO, dateTime);
 
-            if (scheduleParticipantDTO == null) {
-                return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
-            }
-            return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, scheduleParticipantDTO));
-
-        } catch (Exception e) {
-            log.error("addSchedule :{}", e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요."));
-        }
-    }
-
-    @PostMapping("/updateSchedule/{scheduleId}/{dateTime}")
+    @PostMapping("/updateSchedule/{scheduleId}")
     public ResponseEntity<Api> updateSchedule(@RequestHeader HttpHeaders headers,
                                               @RequestBody EventDataDTO eventDataDTO,
-                                              @PathVariable(name = "scheduleId") String scheduleId ,
-                                              @PathVariable(name = "dateTime") String dateTime){
+                                              @PathVariable(name = "scheduleId") String scheduleId){
         try {
             String token = jwtUtil.resolveToken(headers);
             if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
             }
             UserDTO userDTO = jwtUtil.getUserInfo(token);
-          Api api = scheduleService.updateSchedule(eventDataDTO, scheduleId ,dateTime, userDTO);
+          Api api = scheduleService.updateSchedule(eventDataDTO, scheduleId );
 
              return ResponseEntity.ok().body(api);
 

@@ -26,7 +26,7 @@ public class AdminController {
     public String position(){return "adminPosition";}
 
     @GetMapping("/userInfo")
-    public String userInfo(){return "signup";}
+    public String userInfo(){return "adminUser";}
 
 
 

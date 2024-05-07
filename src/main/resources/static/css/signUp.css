@@ -25,7 +25,9 @@ html {
     text-decoration: none;
 }
 
+
 main {
+    height: 100%;
     table {
         width: 100%;
         align-items: center;
@@ -213,3 +215,4 @@ main {
         }
     }
 }
+

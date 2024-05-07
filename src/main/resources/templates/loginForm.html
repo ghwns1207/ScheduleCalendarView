@@ -2,24 +2,50 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script defer src="/js/login.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="/css/login.css"/>
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
 </head>
 <body>
-<!--<form  id="loginForm" onsubmit="submitForm(event)">-->
-<form action="api/auth/login" method="post">
-    <h3>로그인</h3>
-    <div>
-        <div>
-            <label for="userid">아이디</label>
-            <input type="text" id="userid" name="username" placeholder="아이디를 입력해주세요" required>
-        </div>
-        <div>
-            <label for="userPW">비밀번호</label>
-            <input type="password" id="userPW" name="password" placeholder="*******" required>
-        </div>
+<main>
+    <section class="mk-intro">
+    <h1>
+        <span class="login-title-color">M</span>y
+        <span class="login-title-color">K</span>alendar
+    </h1>
+    <!--title/-->
+    <div class="title-logo">
+        <img src="/images/jworksmedia-logo.png" alt="로고 이미지" />
     </div>
-    <button type="submit">로그인</button>
-</form>
+    <!--logo/-->
+    </section>
+    <section class="mk-login">
+        <div class="login-title">
+            <h1>
+                <span class="login-title-color">M</span>y
+                <span class="login-title-color">K</span>alendar
+            </h1>
+            <!--title/-->
+        </div>
+        <form action="api/auth/login" method="post" class="login-container">
+
+            <input type="text" id="userid" name="username" placeholder="아이디를 입력해주세요" class="login-id" required>
+
+            <input type="password" id="userPW" name="password" placeholder="비밀번호를 입력해주세요." class="login-pw" required>
+
+            <button type="submit" class="login-button">로그인</button>
+        </form>
+        <!--아이디/비밀번호/버튼박스/-->
+        <div class="title-logo">
+            <img src="/images/jworksmedia-logo.png" alt=""/>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-text">ⓒ 2024 MK Gloria All Rights Reserved</div>
+    </footer>
+</main>
 </body>
 </html>

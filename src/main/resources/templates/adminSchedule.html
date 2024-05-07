@@ -8,9 +8,11 @@
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script defer src="/js/adminSchedule.js"></script>
     <link  rel="stylesheet" href="/css/adminSchedule.css">
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
 </head>
 <body>
 <div id="admin_schedulePageMain_div">
+    <button id="backBtn">뒤로가기</button>
     <table id="scheduleTable">
         <div>
             <h2>일정 목록</h2>
@@ -25,7 +27,7 @@
 
             <div id="selectNameType">
                 <label for="selectName">회원명 : </label>
-                <input type="text" id="selectName">
+                <input type="text" id="selectName" >
             </div>
 
             <div id="selectCategoryType">
@@ -35,8 +37,8 @@
 
             <div id="selectDateType">
                 <label for="selectStartDate">기간 : </label>
-                <input type="date" id="selectStartDate"> 시작 기간
-                <input type="date" id="selectEndDate"> 종료 기간
+                <input type="date" id="selectStartDate" max="9999-12-31"> 시작 기간
+                <input type="date" id="selectEndDate" max="9999-12-31"> 종료 기간
             </div>
         </div>
 

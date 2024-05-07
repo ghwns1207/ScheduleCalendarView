@@ -1,13 +1,10 @@
 package com.mkgloria.ScheduleCalendarView.config.auth;
 
 
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserEntity;
-import com.mkgloria.ScheduleCalendarView.utils.JwtUtil;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -67,6 +64,7 @@ public class PrincipalDetails implements UserDetails {
         return user.getUserRole();
     }
 
+    public String getUserPosition() {return user.getUserPositionName();}
     @Override // 계정 만료
     public boolean isAccountNonExpired() {return true;}
 

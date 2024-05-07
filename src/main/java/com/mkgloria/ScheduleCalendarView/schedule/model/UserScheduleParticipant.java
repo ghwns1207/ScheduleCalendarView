@@ -1,7 +1,5 @@
 package com.mkgloria.ScheduleCalendarView.schedule.model;
 
-import com.mkgloria.ScheduleCalendarView.schedule.repository.ParticipantRepository;
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserScheduleParticipant {
 
-    private UserScheduleEntity userScheduleEntity;
+    private UserScheduleInfo UserScheduleInfo;
     private List<ScheduleParticipantEntity> participantEntities;
 
 }

@@ -27,17 +27,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if(resData.resultCode === "200"){
                 console.log(resData.data)
             }else if(resData.resultCode === "204"){
-                console.log(resData.errorMessage)
+                alert(resData.errorMessage)
             }else if (resData.resultCode === "403 "){
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
         });
 
 });
+
+document.getElementById("backBtn").addEventListener('click',function (){
+    window.history.back();
+})
 
 document.getElementById("selectNameType").style.display = "none";
 document.getElementById("selectCategoryType").style.display = "none";

@@ -30,15 +30,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             } else if (resData.resultCode === "204") {
                 alert(resData.errorMessage);
                 const categoryBody = document.getElementById("categoryBody");
                 categoryBody.innerHTML = '';
+                let row = document.createElement("tr");
+                let categoryIdCell = document.createElement("td");
+                categoryIdCell.textContent = "검색한 데이터가 없습니다.";
+                categoryIdCell.colSpan = 3; // 셀이 3개의 열에 걸쳐있는 것으로 설정
+                row.appendChild(categoryIdCell);
+                categoryBody.appendChild(row)
             }
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
         })
 });
 
@@ -109,8 +115,6 @@ function createCategoryRow(categoryData){
                 cancelButton.style.display = "none";
                 categoryNameInput.value = categorySave;
             }
-
-
         });
 
         // 취소 버튼
@@ -169,7 +173,7 @@ function editCategory(id,category){
                 createCategoryRow(resData.data);
             }else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }else{
                 alert(resData.errorMessage);
             }
@@ -179,6 +183,10 @@ function editCategory(id,category){
         })
 
 }
+
+document.getElementById("backBtn").addEventListener('click',function (){
+    window.history.back();
+})
 
 function addBtnCen(){
     document.getElementById("addCategory").value ="";
@@ -219,7 +227,7 @@ function addBtnSave(){
                 createCategoryRow(resData.data);
             }else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
-                return document.window.location.assign("/loginFrom");
+                return window.location.assign("/logout");
             }else{
                 alert(resData.errorMessage);
             }

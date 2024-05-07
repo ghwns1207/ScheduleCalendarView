@@ -2,7 +2,7 @@
 package com.mkgloria.ScheduleCalendarView.user.controller;
 
 
-import com.mkgloria.ScheduleCalendarView.user.modle.UserDTO;
+import com.mkgloria.ScheduleCalendarView.user.model.UserDTO;
 import com.mkgloria.ScheduleCalendarView.user.service.UserService;
 import com.mkgloria.ScheduleCalendarView.utils.Api;
 import com.mkgloria.ScheduleCalendarView.utils.ApiResponseUtil;
@@ -43,6 +43,35 @@ public class UserRestController {
             log.error("retrievesParticipant : {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"));
+        }
+    }
+
+    @GetMapping("/checkUserInfo/retrievesUserInfo")
+    public ResponseEntity<Api> retrievesUserInfo(@RequestHeader HttpHeaders headers, HttpServletRequest request, Model model){
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN,"다시 로그인 해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            log.info("userDto : {}",userDTO);
+            if(userDTO == null){
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN,"로그인 정보를 확인해주세요."));
+            }
+            Optional<String> jwtTokenFromCookie= CookieUtils.getJwtTokenFromCookie(request);
+            if(jwtTokenFromCookie.isPresent()){
+                log.info("jwtTokenFromCookie :{}",jwtTokenFromCookie );
+            }
+
+            model.addAttribute("username", userDTO.getUser_name());
+            model.addAttribute("userRole", userDTO.getUserRole());
+            model.addAttribute("userRole", userDTO.getUserPositionName());
+
+            return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK,userDTO));
+        }catch (Exception e){
+            log.error("retrievesUserInfo : {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요."));
         }
     }
 }

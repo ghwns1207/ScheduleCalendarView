@@ -5,6 +5,7 @@
     <title>회원가입</title>
     <script defer src="/js/signUp.js"></script>
     <link  rel="stylesheet" href="/css/signUp.css">
+    <link rel="icon" href="/images/J-11.png" type="image/x-icon">
 </head>
 <body>
 
@@ -17,9 +18,10 @@
             </tr>
             <tr>
                 <td class="signup-id">
-                    <label for="userId" class="signup-id-title">아이디</label>
+                    <label for="userId" class="signup-id-title">아이디</label> <button type="button" id="checkIdBtn">중복확인</button>
                     <br />
                     <input type="text" placeholder="아이디을 입력하세요." id="userId" name="userid" class="signup-id-text"/>
+
                 </td>
             </tr>
             <tr>
@@ -33,7 +35,7 @@
                 <td class="signup-birth">
                     <label for="userBirthday" class="signup-birth-title">생년 월 일</label>
                     <br />
-                    <input type="date" id="userBirthday" class="signup-birthday" />
+                    <input type="date" id="userBirthday" class="signup-birthday" max="9999-12-31" />
                 </td>
             </tr>
             <tr>
@@ -67,7 +69,9 @@
                 <td class="signup-userposition">
                     <div class="signup-userposition-container">
                         <label for="userPosition" class="signup-userposition-title">직급</label>
-                        <select id="userPosition" name="userPosition" class="signup-userposition-select"></select>
+                        <select id="userPosition" name="userPosition" class="signup-userposition-select">
+
+                        </select>
                     </div>
                 </td>
             </tr>
