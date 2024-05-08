@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,19 +32,19 @@ public class ScheduleService {
     private final ScheduleCategoryRepository scheduleCategoryRepository;
     private final ParticipantRepository participantRepository;
 
-    public Api updateSchedule(EventDataDTO eventDataDTO,String scheduleId){
+    public Api updateSchedule(EventDataDTO eventDataDTO, String scheduleId) {
         try {
-            Optional<UserScheduleEntity> userScheduleEntity= scheduleRepository.findById(Long.valueOf(scheduleId));
-            if(userScheduleEntity.isEmpty()){
+            Optional<UserScheduleEntity> userScheduleEntity = scheduleRepository.findById(Long.valueOf(scheduleId));
+            if (userScheduleEntity.isEmpty()) {
                 return ApiResponseUtil.failureResponse(HttpStatus.NO_CONTENT, "해당 일정이 존재하지 않습니다.");
             }
             Optional<ScheduleCategoryEntity> scheduleCategoryEntity = scheduleCategoryRepository.findById(eventDataDTO.getCategory());
-            if(scheduleCategoryEntity.isEmpty()){
+            if (scheduleCategoryEntity.isEmpty()) {
                 log.error(" addSchedule scheduleCategoryEntity.isEmpty 스케줄 카테고리 조회 실패");
-                return ApiResponseUtil.failureResponse( HttpStatus.NO_CONTENT,"일정 카테고리 조회 실패");
+                return ApiResponseUtil.failureResponse(HttpStatus.NO_CONTENT, "일정 카테고리 조회 실패");
             }
 
-           participantRepository.deleteScheduleParticipantEntitiesByUserScheduleEntityScheduleId(Long.valueOf(scheduleId));
+            participantRepository.deleteScheduleParticipantEntitiesByUserScheduleEntityScheduleId(Long.valueOf(scheduleId));
 
             UserScheduleEntity updateUserSchedule = userScheduleEntity.get();
             updateUserSchedule.setUpdated_at(LocalDateTime.now());
@@ -56,7 +57,7 @@ public class ScheduleService {
             updateUserSchedule.setStart(eventDataDTO.getStart());
             updateUserSchedule.setEnd(eventDataDTO.getEnd());
 
-            for(Map<String, String> participant : eventDataDTO.getParticipantList() ){
+            for (Map<String, String> participant : eventDataDTO.getParticipantList()) {
                 ScheduleParticipantEntity scheduleParticipant = ScheduleParticipantEntity
                         .builder()
                         .user_id(Long.valueOf(participant.get("id")))
@@ -71,19 +72,19 @@ public class ScheduleService {
 
             log.info("saveScheduleEntity :{}", saveScheduleEntity);
             return ApiResponseUtil.successResponse(HttpStatus.OK, "일정을 수정했습니다.");
-        }catch (Exception e){
-            log.error("updateSchedule : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("updateSchedule : {}", e.getMessage());
             return ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 문제가 생겼습니다");
         }
 
     }
 
 
-    public UserScheduleDTO retrievesAllSchedule(UserDTO userDTO){
+    public UserScheduleDTO retrievesAllSchedule(UserDTO userDTO) {
         try {
             Optional<List<UserScheduleEntity>> userScheduleEntityList = scheduleRepository.findAllByCheckPublicTrue();
-            log.info("userScheduleEntityList :{}",userScheduleEntityList);
-            if(userScheduleEntityList.isEmpty()){
+            log.info("userScheduleEntityList :{}", userScheduleEntityList);
+            if (userScheduleEntityList.isEmpty()) {
                 return null;
             }
             UserScheduleDTO userScheduleDTO = UserScheduleDTO
@@ -96,31 +97,31 @@ public class ScheduleService {
 
             return userScheduleDTO;
 
-        }catch (Exception e){
-            log.error("retrievesSchedule : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("retrievesSchedule : {}", e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
 
-    public UserScheduleEntity retrieveScheduleByScheduleIdAndUserId(UserDTO userDTO, String scheduleId){
+    public UserScheduleEntity retrieveScheduleByScheduleIdAndUserId(UserDTO userDTO, String scheduleId) {
         try {
             UserScheduleEntity userScheduleEntity = scheduleRepository.findByUserEntity_IdAndScheduleId(userDTO.getId(), Long.valueOf(scheduleId));
-            log.info("userScheduleEntity : {}",userScheduleEntity);
-            if (userScheduleEntity == null){
+            log.info("userScheduleEntity : {}", userScheduleEntity);
+            if (userScheduleEntity == null) {
                 return null;
             }
             return userScheduleEntity;
-        }catch (Exception e){
-            log.error("retrieveScheduleByScheduleId : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("retrieveScheduleByScheduleId : {}", e.getMessage());
             return null;
         }
     }
 
-    public UserScheduleInfo retrieveScheduleByScheduleId( String scheduleId){
+    public UserScheduleInfo retrieveScheduleByScheduleId(String scheduleId) {
         try {
-            Optional<UserScheduleEntity> userScheduleEntity = scheduleRepository.findById( Long.valueOf(scheduleId));
-            log.info("userScheduleEntity : {}",userScheduleEntity);
+            Optional<UserScheduleEntity> userScheduleEntity = scheduleRepository.findById(Long.valueOf(scheduleId));
+            log.info("userScheduleEntity : {}", userScheduleEntity);
 
             return userScheduleEntity.map(scheduleEntity -> UserScheduleInfo.builder()
                     .userId(scheduleEntity.getUserEntity().getId())
@@ -135,8 +136,8 @@ public class ScheduleService {
                     .end(scheduleEntity.getEnd())
                     .all_day(scheduleEntity.isAll_day())
                     .build()).orElse(null);
-        }catch (Exception e){
-            log.error("retrieveScheduleByScheduleId : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("retrieveScheduleByScheduleId : {}", e.getMessage());
             return null;
         }
     }
@@ -146,22 +147,20 @@ public class ScheduleService {
         try {
             scheduleRepository.deleteById(Long.valueOf(scheduleId));
             return true;
-        }catch (Exception e){
-            log.error("delSchedule :{}",e.getMessage());
+        } catch (Exception e) {
+            log.error("delSchedule :{}", e.getMessage());
             return false;
         }
     }
 
-    public UserScheduleDTO retrievesSchedule(UserDTO userDTO, String startTime,String endTime ){
-
-
-        LocalDateTime startDateTime = LocalDateTime.parse(startTime.replace("Z",""));
-        LocalDateTime endDateTime = LocalDateTime.parse(endTime.replace("Z",""));
+    public UserScheduleDTO retrievesSchedule(UserDTO userDTO, String startTime, String endTime) {
+        LocalDateTime startDateTime = LocalDateTime.parse(startTime.replace("Z", ""));
+        LocalDateTime endDateTime = LocalDateTime.parse(endTime.replace("Z", ""));
         try {
             Optional<List<UserScheduleEntity>> userScheduleEntityList =
-                    scheduleRepository.findAllByCheckPublicTrueAndStartBetweenOrEndBetween(startDateTime,endDateTime,startDateTime,endDateTime);
-            log.info("userScheduleEntityList :{}",userScheduleEntityList);
-            if(userScheduleEntityList.isEmpty()){
+                    scheduleRepository.findAllByCheckPublicTrueAndStartBetweenOrEndBetween(startDateTime, endDateTime, startDateTime, endDateTime);
+            log.info("userScheduleEntityList :{}", userScheduleEntityList);
+            if (userScheduleEntityList.isEmpty()) {
                 return null;
             }
             List<UserScheduleInfo> userScheduleInfos = userScheduleEntityList.map(scheduleEntities ->
@@ -191,31 +190,31 @@ public class ScheduleService {
 
             return userScheduleDTO;
 
-        }catch (Exception e){
-            log.error("retrievesSchedule : {}",e.getMessage());
+        } catch (Exception e) {
+            log.error("retrievesSchedule : {}", e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
 
-    public Api addSchedule(EventDataDTO eventDataDTO, UserDTO userDTO){
+    public Api addSchedule(EventDataDTO eventDataDTO, UserDTO userDTO) {
 
         try {
-            if (eventDataDTO == null || userDTO == null){
+            if (eventDataDTO == null || userDTO == null) {
                 log.error("addSchedule 전송 데이터 정보 없음");
-                return ApiResponseUtil.failureResponse( HttpStatus.BAD_REQUEST,"전송 데이터 정보 없음");
+                return ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "전송 데이터 정보 없음");
             }
 
             Optional<ScheduleCategoryEntity> scheduleCategoryEntity = scheduleCategoryRepository.findById(eventDataDTO.getCategory());
-            if(scheduleCategoryEntity.isEmpty()){
+            if (scheduleCategoryEntity.isEmpty()) {
                 log.error(" addSchedule scheduleCategoryEntity.isEmpty 스케줄 카테고리 조회 실패");
-                return ApiResponseUtil.failureResponse( HttpStatus.BAD_REQUEST,"스케줄 카테고리 조회 실패");
+                return ApiResponseUtil.failureResponse(HttpStatus.BAD_REQUEST, "스케줄 카테고리 조회 실패");
             }
 
-            UserEntity userEntity =  userRepository.findUserEntityByWithdrawnFalseAndUserId(userDTO.getUser_id());
-            if(userEntity == null){
+            UserEntity userEntity = userRepository.findUserEntityByWithdrawnFalseAndUserId(userDTO.getUser_id());
+            if (userEntity == null) {
                 log.error(" addSchedule userEntity.isEmpty 유저 조회 실패");
-                return ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN,"유저 조회 실패");
+                return ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "유저 조회 실패");
             }
             if (eventDataDTO.isRepetition()) {
                 // 반복 선택한 경우
@@ -244,7 +243,7 @@ public class ScheduleService {
                             .created_at(LocalDateTime.now())
                             .build();
                     UserScheduleEntity schedule = scheduleRepository.save(userScheduleEntity);
-                    for(Map<String, String> participant : eventDataDTO.getParticipantList() ){
+                    for (Map<String, String> participant : eventDataDTO.getParticipantList()) {
                         ScheduleParticipantEntity scheduleParticipant = ScheduleParticipantEntity
                                 .builder()
                                 .user_id(Long.valueOf(participant.get("id")))
@@ -272,7 +271,7 @@ public class ScheduleService {
 
             UserScheduleEntity schedule = scheduleRepository.save(userScheduleEntity);
 
-            for(Map<String, String> participant : eventDataDTO.getParticipantList() ){
+            for (Map<String, String> participant : eventDataDTO.getParticipantList()) {
                 ScheduleParticipantEntity scheduleParticipant = ScheduleParticipantEntity
                         .builder()
                         .user_id(Long.valueOf(participant.get("id")))
@@ -288,25 +287,41 @@ public class ScheduleService {
                     .userScheduleEntity(schedule)
                     .build();
 
-            return ApiResponseUtil.successResponse(HttpStatus.OK,userAddScheduleDTO);
-        }catch (Exception e){
-            log.error("addSchedule save : {}",e.getMessage());
+            return ApiResponseUtil.successResponse(HttpStatus.OK, userAddScheduleDTO);
+        } catch (Exception e) {
+            log.error("addSchedule save : {}", e.getMessage());
             e.printStackTrace();
             return ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요.");
         }
     }
 
-    public List<ScheduleParticipantEntity> retrievesParticipant(Long scheduleId){
+    public List<ScheduleParticipantEntity> retrievesParticipant(Long scheduleId) {
 
         try {
             Optional<List<ScheduleParticipantEntity>> participantEntities =
                     participantRepository.findAllByUserScheduleEntityScheduleId(scheduleId);
             return participantEntities.orElse(null);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("retrievesParticipant : {}", e.getMessage());
             return null;
         }
     }
 
+    public List<UserScheduleEntity> retrievesIdSchedule(UserDTO userDTO, String dateTime) {
+        try {
+            // 시간대 정보를 제거한 후에 LocalDateTime으로 파싱
+            LocalDateTime localDateTime = LocalDateTime.parse(dateTime.replace(" GMT+0900 (한국 표준시)", ""), DateTimeFormatter.ofPattern("EEE MMM dd yyyy HH:mm:ss", Locale.ENGLISH));
+
+            // 시작 시간은 한 달을 빼고, 종료 시간은 한 달을 더함
+            LocalDateTime startDateTime = localDateTime.minusMonths(1);
+            LocalDateTime endDateTime = localDateTime.plusMonths(1);
+            Optional<List<UserScheduleEntity>> userScheduleEntityList = scheduleRepository.findAllByCheckPublicTrueAndUserEntityIdAndStartBetweenOrEndBetween(userDTO.getId(), startDateTime, endDateTime, startDateTime, endDateTime);
+            log.info("userScheduleEntityList : {}", userScheduleEntityList.get());
+            return userScheduleEntityList.orElse(null);
+        } catch (Exception e) {
+            log.error("retrievesParticipant : {}", e.getMessage());
+            return null;
+        }
+    }
 
 }

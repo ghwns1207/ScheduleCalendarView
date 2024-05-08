@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const slideCloseBtn = document.querySelector('.slide-close-button');
+    const slideMenu = document.querySelector('.slide-menu');
+
+    slideCloseBtn.addEventListener('click', function () {
+        slideMenu.classList.toggle('active');
+    });
+
+
     const calendarEl = document.getElementById('calendar')
 
     // URL에서 쿼리 문자열을 추출합니다.
@@ -40,24 +48,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(resData => {
             if (resData.resultCode === "200") {
-                console.log(resData.data)
                 userSaveId = resData.data.id;
                 userSaveRole = resData.data.userRole;
                 userSaveName = resData.data.user_name;
-                if (resData.data.userRole === "ROLE_ADMIN") {
-                    // let adminDiv = document.getElementById("adminBtn");
-                    // // 버튼 요소 생성
-                    // let adminBtn = document.createElement("button");
-                    // // 버튼에 텍스트 설정
-                    // adminBtn.textContent = "관리자 페이지";
-                    // adminBtn.id = "adminPageBtn"
-                    // // 버튼에 이벤트 리스너 추가
-                    // adminBtn.addEventListener("click", function () {
-                    //     window.location.assign("/admin/adminPage");
-                    // });
-                    // adminDiv.appendChild(adminBtn);
-                    renderCalendar();
-                }
+                renderCalendar();
+                document.getElementById("userName").innerHTML = userSaveName;
+                document.getElementById("userId").innerHTML = resData.data.user_id;
+                document.getElementById("logOutId").innerHTML = resData.data.user_id;
             } else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
                 return window.location.assign("/logout");
@@ -150,7 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
         });
 
-    console.log(userSaveRole);
     function renderCalendar(){
         window.calendar = new FullCalendar.Calendar(calendarEl, {
             height: '90%',
@@ -162,14 +158,14 @@ document.addEventListener('DOMContentLoaded', function () {
             // showNonCurrentDates: false, // 이전 달과 다음 달의 날짜도 표시
             customButtons: {
                 mySaveBtn: {
-                    text : "일정 추가",
-                    //  icon: <img src="/images/make_button.png" alt="버튼"/>,
+                    // text : "일정 추가",
+                    icon: "make",
                     click: function () {
                         openModal();
                     }
                 },
                 myAdminPage : {
-                    text : "관리자 페이지",
+                    text : "관리자",
                     click : function () {
                         window.location.assign("/admin/adminPage");
                     }
@@ -179,13 +175,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     click : function () {
 
                     }
+                },
+                hamburger : {
+                    text : "",
+                    click : function () {
+                        const slideMenu = document.querySelector('.slide-menu');
+                        slideMenu.classList.toggle('active');
+                    }
                 }
             },
             locale: "ko",
             headerToolbar: {
                 left: 'mySaveBtn',
                 center: 'prev title next',
-                right: 'dayGridMonth,listMonth'
+                right: 'hamburger'
             },
             footerToolbar : {
                 left: (userSaveRole === "ROLE_ADMIN" ? 'myAdminPage' : ''),
@@ -553,9 +556,9 @@ function editSchedule(scheduleId) {
                 // modal-footer 요소에 "저장" 버튼을 추가합니다.
                 modalFooter.appendChild(button);
                 modalFooter.appendChild(saveButton);
+
             } else if (resData.resultCode === "204") {
                 alert(resData.errorMessage);
-                closeEditModal();
                 closeUpdateModal();
             } else if (resData.resultCode === "403") {
                 alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
@@ -601,7 +604,7 @@ function deleteSchedule(scheduleId) {
                     closeEventInfoModal();
                 } else if (resData.resultCode === "204") {
                     alert(resData.errorMessage);
-                    window.calendar.refetchEvents();
+                    window.calendar.rerenderEvents();
                 }
             })
             .catch(error => {
@@ -1083,21 +1086,132 @@ function addParticipants() {
     cell3.appendChild(deleteButton); // 삭제 버튼을 세 번째 셀에 추가
 }
 
-
+const slideMenu = document.querySelector('.slide-menu');
 // 일간 보기 버튼 클릭 시
 function changeToDay(){
     window.calendar.changeView('dayGridDay'); // 일간 뷰로 변경
-
+    slideMenu.classList.toggle('active');
 }
 
 // 주간 보기 버튼 클릭 시
 function changeToWeek(){
     window.calendar.changeView('timeGridWeek'); // 주간 뷰로 변경
+    slideMenu.classList.toggle('active');
 }
 
 // 월간 보기 버튼 클릭 시
 function changeToMonth(){
     window.calendar.changeView('dayGridMonth'); // 월간 뷰로 변경
-
+    slideMenu.classList.toggle('active');
 }
 
+document.getElementById("logout").addEventListener("click", function () {
+    window.location.assign("/logout");
+})
+
+
+// 월간 보기 버튼 클릭 시
+function changeToListWeek(){
+
+    let dateTime = window.calendar.getDate();
+    const jwtToken = localStorage.getItem('jwtToken');
+    console.log(dateTime);
+    let headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken
+    };
+
+    fetch(`/user/api/calendar/retrievesIdSchedule/${dateTime}`, {
+        method: "GET",
+        headers: headers,
+        redirect: 'follow',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            if (response.redirected) {
+                // 리다이렉션된 경우
+                window.location.assign(response.url);
+                return;
+            }
+            return response.json();
+        })
+        .then(resData =>{
+            if (resData.resultCode === "200") {
+                console.log(resData.data);
+                // 캘린더에서 모든 이벤트 제거
+                window.calendar.removeAllEvents();
+                let event = resData.data;
+                let eventList = [];
+                if (event) {
+                    eventList = event.map(function (schedule) {
+                        if (schedule.all_day) {
+                            if (schedule.end) {
+                                let endDate = new Date(schedule.end); // 종료 시간을 Date 객체로 변환
+                                endDate.setDate(endDate.getDate() + 1); // 종료 시간에 1일을 더함
+                                let endtime = endDate.toISOString(); // 늘어난 종료 시간을 ISO 문자열로 변환
+                                return {
+                                    allDay: schedule.all_day,
+                                    groupId: schedule.scheduleId,
+                                    title:  schedule.title + "  " + schedule.scheduleCategoryEntity.category_name
+                                        + ((schedule.description || schedule.location ? "(" : "")) + schedule.location + ((schedule.location && schedule.description ? ", " : "")) + schedule.description
+                                        + ((schedule.description || schedule.location ? ")" : "")),
+                                    color: schedule.color,
+                                    start: schedule.start,
+                                    end: endtime,
+                                };
+                            } else {
+                                return {
+                                    allDay: schedule.all_day,
+                                    groupId: schedule.scheduleId,
+                                    title:  schedule.title + "  " + schedule.scheduleCategoryEntity.category_name
+                                        + ((schedule.description || schedule.location ? "(" : "")) + schedule.location + ((schedule.location && schedule.description ? ", " : "")) + schedule.description
+                                        + ((schedule.description || schedule.location ? ")" : "")),
+                                    start: schedule.start, // 적절한 필드로 변경해야 함
+                                    color: schedule.color,
+                                };
+                            }
+                        } else {
+                            if (schedule.end) {
+                                return {
+                                    allDay: schedule.all_day,
+                                    groupId: schedule.scheduleId,
+                                    title:  schedule.title + "  " + schedule.scheduleCategoryEntity.category_name
+                                        + ((schedule.description || schedule.location ? "(" : "")) + schedule.location + ((schedule.location && schedule.description ? ", " : "")) + schedule.description
+                                        + ((schedule.description || schedule.location ? ")" : "")),
+                                    color: schedule.color,
+                                    start: schedule.start,
+                                    end: schedule.end,
+                                    // 필요한 경우 다른 필드도 추가할 수 있음
+                                };
+                            } else {
+                                return {
+                                    allDay: schedule.all_day,
+                                    groupId: schedule.scheduleId,
+                                    title: schedule.title + "  " + schedule.scheduleCategoryEntity.category_name
+                                        + ((schedule.description || schedule.location ? "(" : "")) + schedule.location + ((schedule.location && schedule.description ? ", " : "")) + schedule.description
+                                        + ((schedule.description || schedule.location ? ")" : "")),
+                                    start: schedule.start, // 적절한 필드로 변경해야 함
+                                    color: schedule.color,
+                                };
+                            }
+                        }
+                    });
+                }
+
+                window.calendar.addEvent(eventList)
+                window.calendar.changeView('listMonth');
+            }else if (resData.resultCode === "204") {
+                console.log(resData.data);
+            } else if (resData.resultCode === "403") {
+                alert("로그아웃 되었습니다. 다시 로그인 해주세요.");
+                return window.location.assign("/logout");
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    slideMenu.classList.toggle('active');
+}

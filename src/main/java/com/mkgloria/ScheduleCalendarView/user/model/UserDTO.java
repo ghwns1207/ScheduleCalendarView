@@ -16,7 +16,6 @@ public class UserDTO {
 
     private Long id;
 
-    @JsonIgnore
     private String user_id;
 
     private String user_name;

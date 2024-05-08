@@ -9,11 +9,49 @@
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.11/index.global.min.js'></script>
-    <link href="/css/calendarView.css" rel="stylesheet">
-    <script src="/js/calendarView.js"></script>
+    <link href="/css/calendarView.css?v=2" rel="stylesheet">
+    <script src="/js/calendarView.js" defer></script>
     <link rel="icon" href="/images/J-11.png" type="image/x-icon">
 </head>
 <body>
+
+<div class="slide-menu">
+    <section class="user-interface-section">
+        <div class="user-wrap">
+            <div class="user-img"></div>
+            <div class="user-name-div">
+                <p class="user-name" id="userName"></p>
+                <p class="user-id" id="userId"></p>
+            </div>
+        </div>
+        <div class="slide-close-button"></div>
+    </section>
+    <section class="select-date-section">
+        <div class="time month">
+            <div class="img-container" onclick="changeToMonth()"></div>
+            <div class="text-container">월간</div>
+        </div>
+        <div class="time week">
+            <div class="img-container" onclick="changeToWeek()"></div>
+            <div class="text-container">주간</div>
+        </div>
+        <div class="time day">
+            <div class="img-container" id="changeToDay" onclick="changeToDay()"></div>
+            <div class="text-container"><label for="changeToDay">일간</label></div>
+        </div>
+    </section>
+    <section class="log-out-section">
+        <div class="log-out-button">
+            <div class="log-out-inner left">
+                <div class="logout-icon"></div>
+                <div class="logout-text" id="logout">로그아웃</div>
+            </div>
+            <div class="log-out-inner right" id="logOutId">
+            </div>
+        </div>
+    </section>
+
+</div>
 
 <div id="calendar-container">
     <div id="calendar"></div>
@@ -174,11 +212,11 @@
                     </td>
                 </tr>
             </table>
-<!--            <div>-->
-<!--                <button onclick="changeToDay()" type="button">월</button>-->
-<!--                <button onclick="changeToWeek()"  type="button">주</button>-->
-<!--                <button onclick="changeToMonth()"type="button">일</button>-->
-<!--            </div>-->
+            <!--            <div>-->
+            <!--                <button onclick="changeToDay()" type="button">월</button>-->
+            <!--                <button onclick="changeToWeek()"  type="button">주</button>-->
+            <!--                <button onclick="changeToMonth()"type="button">일</button>-->
+            <!--            </div>-->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">취소
                 </button>

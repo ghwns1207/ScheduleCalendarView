@@ -77,28 +77,28 @@ public class ScheduleController {
         }
     }
 
-//    @GetMapping("/retrievesIdSchedule/{dateTime}")
-//    public ResponseEntity<Api> retrievesIdSchedule(@RequestHeader HttpHeaders headers, @PathVariable(name = "dateTime") String dateTime) {
-//        try {
-//            String token = jwtUtil.resolveToken(headers);
-//            if (!jwtUtil.validateToken(token)) {
-//                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
-//            }
-//            UserDTO userDTO = jwtUtil.getUserInfo(token);
-//            UserScheduleParticipantDTO scheduleParticipantDTO = scheduleService.retrievesIdSchedule(, dateTime);
-//
-//            if (scheduleParticipantDTO == null) {
-//                return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
-//            }
-//            return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, scheduleParticipantDTO));
-//
-//        } catch (Exception e) {
-//            log.error("addSchedule :{}", e.getMessage());
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                    ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요."));
-//        }
-//    }
+    @GetMapping("/retrievesIdSchedule/{dateTime}")
+    public ResponseEntity<Api> retrievesIdSchedule(@RequestHeader HttpHeaders headers, @PathVariable(name = "dateTime") String dateTime) {
+        try {
+            String token = jwtUtil.resolveToken(headers);
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.ok().body(ApiResponseUtil.failureResponse(HttpStatus.FORBIDDEN, "로그인 정보를 확인해주세요."));
+            }
+            UserDTO userDTO = jwtUtil.getUserInfo(token);
+            List<UserScheduleEntity> userScheduleEntityList = scheduleService.retrievesIdSchedule(userDTO,dateTime);
+
+            if (userScheduleEntityList == null) {
+                return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.NO_CONTENT, "스케줄이 없습니다,"));
+            }
+            return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, userScheduleEntityList));
+
+        } catch (Exception e) {
+            log.error("addSchedule :{}", e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러 잠시 후 다시 시도해주세요."));
+        }
+    }
 
     @PostMapping("/addSchedule")
     public ResponseEntity<Api> addSchedule(@RequestHeader HttpHeaders headers, @RequestBody EventDataDTO eventDataDTO) {
@@ -126,8 +126,6 @@ public class ScheduleController {
     }
 
 
-
-
     @GetMapping("/delSchedule/{schedule_id}")
     public ResponseEntity<Api> delSchedule(@RequestHeader HttpHeaders headers, @PathVariable(name = "schedule_id") String scheduleId) {
         try {
@@ -137,6 +135,7 @@ public class ScheduleController {
             }
             log.info(scheduleId);
             boolean delSchedule = scheduleService.delSchedule(scheduleId);
+
             if (delSchedule) {
                 return ResponseEntity.ok().body(ApiResponseUtil.successResponse(HttpStatus.OK, "일정이 삭제되었습니다."));
             }else {
@@ -148,7 +147,6 @@ public class ScheduleController {
                     .body(ApiResponseUtil.failureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 에러가 있습니다. 잠시 후 다시 시도해주세요."));
         }
     }
-
 
     @PostMapping("/updateSchedule/{scheduleId}")
     public ResponseEntity<Api> updateSchedule(@RequestHeader HttpHeaders headers,
